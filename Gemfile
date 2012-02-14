@@ -36,3 +36,19 @@ gem 'jquery-rails'
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
+#
+gem "devise"
+gem "blacklight"
+gem "hydra-head", :git => "git://github.com/projecthydra/hydra-head.git", :branch => '4.0.x'
+
+group :development, :test do 
+  gem 'solrizer-fedora', '>=1.0.1'
+  gem 'rspec'
+  gem 'rspec-rails', '>=2.5.0'
+  gem 'mocha'
+  gem 'cucumber-rails'
+  gem 'database_cleaner'
+  gem 'capybara'
+  gem 'bcrypt-ruby'
+  gem "jettywrapper"
+end
