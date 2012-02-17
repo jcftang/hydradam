@@ -68,13 +68,13 @@ module RockhallAssetsHelper
     result = String.new
     result << "<dt><label for=\"#{id}\">#{field}</label></dt>" unless opts[:hidden]
     if params[:action] == "edit"
-      values.each do |value|
+      ((values if values.respond_to?(:each)) || [values]).each do |value|
         result << "<dd id=\"#{id}\" class=\"field\">"+ value + "</dd>"
       end
     else
       result << "<dd id=\"#{id}\" class=\"field\">"
       result << "<ul>"
-      values.each do |value|
+      ((values if values.respond_to?(:each)) || [values]).each do |value|
         if opts[:area]
           result << value
         else
@@ -105,21 +105,6 @@ module RockhallAssetsHelper
     end
     return result
   end
-
-
-  def asset_link(type)
-    @document_fedora.external_video(type.to_sym).datastreams["ACCESS1"].label
-  end
-
-  def asset_path(type)
-    path = String.new
-    unless @document_fedora.external_video(:h264).nil?
-      filename = @document_fedora.external_video(:h264).datastreams["descMetadata"].get_values(:name)
-      path = File.join(@document_fedora.pid.gsub(/:/,"_"),"data",filename)
-    end
-    return path
-  end
-
 
   def display_all_assets
     results = String.new
