@@ -18,17 +18,18 @@ class CatalogController < ApplicationController
   configure_blacklight do |config|
     config.default_solr_params = { 
       :qt => 'search',
-      :rows => 10 
+      :rows => 10,
+      :fl => "*, score" 
     }
 
     # solr field configuration for search results/index views
-    config.index.show_link = 'title_display'
-    config.index.record_display_type = 'format'
+    config.index.show_link = 'title_t'
+    config.index.record_display_type = 'id'
 
     # solr field configuration for document/show views
-    config.show.html_title = 'title_display'
-    config.show.heading = 'title_display'
-    config.show.display_type = 'format'
+    config.show.html_title = 'title_t'
+    config.show.heading = 'title_t'
+    config.show.display_type = 'has_model_s'
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
@@ -46,13 +47,14 @@ class CatalogController < ApplicationController
     # on the solr side in the request handler itself. Request handler defaults
     # sniffing requires solr requests to be made with "echoParams=all", for
     # app code to actually have it echo'd back to see it.  
-    config.add_facet_field 'format', :label => 'Format' 
-    config.add_facet_field 'pub_date', :label => 'Publication Year' 
-    config.add_facet_field 'subject_topic_facet', :label => 'Topic', :limit => 20 
-    config.add_facet_field 'language_facet', :label => 'Language', :limit => true 
-    config.add_facet_field 'lc_1letter_facet', :label => 'Call Number' 
-    config.add_facet_field 'subject_geo_facet', :label => 'Region' 
-    config.add_facet_field 'subject_era_facet', :label => 'Era'  
+    config.add_facet_field 'object_type_facet', :label => "Format"
+    config.add_facet_field 'pub_date', :label => "Publication Year"
+    config.add_facet_field 'subject_topic_facet', :label => "Topic", :limit => 20
+    config.add_facet_field 'language_facet', :label => "Language", :limit => true
+    config.add_facet_field 'lc_1letter_facet', :label => "Call Number"
+    config.add_facet_field 'subject_geo_facet', :label => "Era"
+    config.add_facet_field 'subject_era_facet', :label => "Region"
+
 
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
