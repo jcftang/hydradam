@@ -13,7 +13,6 @@
 //= require jquery
 //= require jquery_ujs
 // Required by Hydra
-//= require 'jquery.hydraMetadata.js'         
 //= require 'jquery.ui.datepicker.js'      
 
 //
