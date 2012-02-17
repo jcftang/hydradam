@@ -1,0 +1,14 @@
+<%= form_tag url_for(:action=>"update", :controller=>"assets", :content_type=>"external_video"),
+      :method             => "put",
+      :id                 => "properties",
+      "data-resourceType" => "archival_video",
+      "accept-charset"    => "utf-8" do %>
+
+  <fieldset id="instantiation_fields">
+    <dl>
+      <%= display_field([:rights_summary]) %>
+      <%= display_field([:note], {:multiple=>TRUE}) %>
+    </dl>
+  </fieldset>
+  <%= submit_tag 'Save File', {:id => "submitDocument"} %>
+<% end %>
