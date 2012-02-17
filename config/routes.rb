@@ -4,6 +4,27 @@ Hydradam::Application.routes.draw do
 
   root :to => "catalog#index"
 
+# My routes go here
+  # Routes for subjects and pbcore controller
+  resources :assets do
+    resources :subjects, :only=>[:new,:create]
+    resources :pbcore, :only=>[:new,:create]
+    #resources :pbcore
+  end
+  
+ #map.asset_subject 'assets/:asset_id/subjects/:subject_type/:index', :controller=>:subjects, :action=>:show, :conditions => { :method => :get }
+  match "assets/:asset_id/subjects/:subject_type/:index" => "subjects#show", :as => :asset_subject, :via => :get
+
+  #map.asset_pbcore 'assets/:asset_id/pbcore/:node/:index', :controller=>:pbcore, :action=>:show, :conditions => { :method => :get }
+  match "assets/:asset_id/pbcore/:node/:index" => "pbcore#show", :as => :asset_pbcore, :via => :get
+
+  #map.connect 'assets/:asset_id/subjects/:subject_type/:index', :controller=>:subjects, :action=>:destroy, :conditions => { :method => :delete }
+  match "assets/:asset_id/subjects/:subject_type/:index" => "subjects#destroy", :via => :delete
+
+  #map.connect 'assets/:asset_id/pbcore/:node/:index', :controller=>:pbcore, :action=>:destroy, :conditions => { :method => :delete }
+  match "assets/:asset_id/pbcore/:node/:index" => "pbcore#destroy", :via => :delete
+  
+
   devise_for :users
 
   # The priority is based upon order of creation:
