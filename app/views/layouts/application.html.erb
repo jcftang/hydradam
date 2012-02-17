@@ -1,14 +1,45 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Hydradam</title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
 
-<%= yield %>
-
-</body>
+<!--[if lt IE 7 ]> <html class="ie6"> <![endif]--> 
+<!--[if IE 7 ]>    <html class="ie7"> <![endif]--> 
+<!--[if IE 8 ]>    <html class="ie8"> <![endif]--> 
+<!--[if IE 9 ]>    <html class="ie9"> <![endif]--> 
+<!--[if gt IE 9]>  <html> <![endif]-->
+<!--[if !IE]><!--> <html> <!--<![endif]-->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title><%= h(@page_title || application_name) %></title>
+    <link href="<%= opensearch_catalog_path(:format => 'xml', :only_path => false) %>" title="<%= application_name%>" type="application/opensearchdescription+xml" rel="search"/>
+    <%= favicon_link_tag asset_path('favicon.ico') %>
+    <%= stylesheet_link_tag    "application" %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+    <%= raw(render_head_content) %>
+  </head>
+  <% onload_text = "$('input#q').focus();" if params[:q].to_s.empty? and params[:f].to_s.empty? and params[:id].nil? %>
+  <body onload="<%= onload_text %>" class="<%= render_body_class.html_safe %>">
+    <div id="page">
+      <div id="hd">
+        <div id="logo">
+          <h1 class="site_title"><%= link_to application_name, "/" %><%= (params[:controller] == "catalog" and !params[:id]) ? "<span id='results_text'>Search Results</span>".html_safe : "" %></h1>
+        </div>
+        <div id="user_util_links">
+          <%= render :partial=>'/user_util_links' %>
+        </div>
+      </div>
+      <div id="bd">
+        <div id="main">
+          <div id="main_container">
+            <%= render :partial=>'/flash_msg' %>
+            <%= yield %>
+          </div>
+        </div>
+        <div id="sidebar"><%= sidebar_items.join('').html_safe %></div>
+      </div>
+      <div id="ft">
+        <%= raw(@footer) %>
+      </div>
+    </div>
+  </body>
 </html>
+
