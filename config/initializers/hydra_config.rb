@@ -34,7 +34,7 @@ if Hydra.respond_to?(:configure)
                              ],
         # Not being used right now
         :generic_contents => [{:name => "description", :edit_partial => "generic_content_objects/description_form", :show_partial => "generic_contents/show_description"},
-                              {:name => "files",       :edit_partial => "file_assets/file_assets_form",             :show_partial => "file_assets/index"},
+                              {:name => "files",       :edit_partial => "hydra/file_assets/file_assets_form",             :show_partial => "file_assets/index"},
                               {:name => "permissions", :edit_partial => "permissions/permissions_form",             :show_partial => "generic_contents/show_permissions"},
                               {:name => "contributor", :edit_partial => "generic_content_objects/contributor_form", :show_partial => "generic_contents/show_contributors"}
                              ]
