@@ -40,9 +40,8 @@ gem 'jquery-rails'
 gem "devise"
 gem "blacklight", :git   => "git://github.com/projectblacklight/blacklight.git"
 gem "hydra-head", :git   => "git://github.com/projecthydra/hydra-head.git", :branch => '4.0.x'
-#gem 'blacklight', :path => '/Volumes/Scratch/blacklight'
-#gem "hydra-head", :path => "/Volumes/Scratch/hydra-head"
 gem "mediainfo"
+gem "noid"
 
 group :development, :test do 
   gem 'solrizer-fedora', '>=1.0.1'
