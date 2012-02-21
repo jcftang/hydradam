@@ -22,66 +22,18 @@ class hydradam {
     require => [Group['jetty']]
   }
 
-
   file {
-    '/wgbh':
-      ensure => directory,
-      owner  => 'hydradam',
-      group  => 'hydradam';
-
-    '/wgbh/http':
-      ensure => directory,
-      owner  => 'hydradam',
-      group  => 'hydradam';
-
-    '/wgbh/http/hydradam':
-      ensure => directory,
-      owner  => 'hydradam',
-      group  => 'hydradam';
-
-    '/wgbh/http/hydradam/hydra-app':
-      ensure  => directory,
-      owner   => 'hydradam',
-      group   => 'hydradam',
-      source  => "/vagrant",
-      recurse => true;
-    '/wgbh/http/hydradam/hydra-jetty':
-      ensure => directory,
-      source => '/vagrant/jetty',
-      owner  => 'jetty',
-      group  => 'jetty';
+    "/etc/init.d/jetty.sh":
+      mode    => "0755",
+      content => template("jetty/jetty.erb")
   }
 
-  exec { 'hydradam_setup':
-    command  => 'rvm use 1.9.3@hydra-dam && bundle install',
-    user     => 'hydradam',
-    provider => 'shell',
-    path     => '/usr/local/rvm/gems/ruby-1.9.3-p0@global/bin:/usr/local/rvm/rubies/ruby-1.9.3-p0/bin:/usr/local/rvm/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin',
-    cwd      => '/wgbh/http/hydradam/hydra-app',
-    require  => [File['/wgbh/http/hydradam/hydra-app'], Rvm_gem['ruby-1.9.3-p0/passenger']]
-  }
+  file { "/etc/default":
+      ensure => directory;
 
-  exec { 'hydradam_config':
-    command => '/bin/true',
-    require => Exec['hydradam_setup']
+    "/etc/default/jetty":
+      require  => [User['jetty'],File['/etc/default']],
+      content => "JETTY_HOME=/wgbh/http/hydradam/hydra-jetty\nJETTY_USER=jetty"
   }
-
-  exec { 'hydradam_demo':
-    command => 'rvm use 1.9.3@hydra-dam && rails server',
-    user     => 'hydradam',
-    provider => 'shell',
-    path     => '/usr/local/rvm/gems/ruby-1.9.3-p0@global/bin:/usr/local/rvm/rubies/ruby-1.9.3-p0/bin:/usr/local/rvm/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin',
-    cwd      => '/wgbh/http/hydradam/hydra-app',
-    require => [Exec['jetty_start'], Exec['hydradam_setup']]
-  }
-
-  exec { 'jetty_start':
-    command => 'java -jar jetty.sh',
-    user    => 'jetty',
-    path    => '/usr/bin',
-    cwd     => '/wgbh/http/hydradam/hydra-jetty',
-    require => [File['/wgbh/http/hydradam/hydra-jetty']]
-  }
-
 
 }

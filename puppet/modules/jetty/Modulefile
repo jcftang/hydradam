@@ -1,0 +1,10 @@
+name    'jetty'
+version '0.0.0'
+source 'git://github.com/cbeer/puppet-stuff'
+author 'cbeer'
+license 'Apache'
+summary ''
+description ''
+project_page ''
+
+## Add dependencies, if any:
