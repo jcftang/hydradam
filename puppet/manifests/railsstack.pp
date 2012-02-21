@@ -3,6 +3,7 @@ class railsstack {
 
   include mysql::server
   include apache
+  include sqlite
 
   class { 'java':
     distribution => 'java-1.6.0-openjdk',

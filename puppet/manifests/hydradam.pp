@@ -9,10 +9,25 @@ class hydradam {
   user { 'hydradam':
     ensure  => present,
     shell   => '/bin/bash',
-    home    => '/wgbh/http/hydradam',
+    home    => '/var/www/hydradam',
     groups  => ['hydra','rvm'],
-    require => [Group['hydra'],Rvm_gem['ruby-1.9.3-p0/passenger']]
+    require => [Group['hydra']]
   }
+
+  user { 'vagrant':
+    ensure  => present,
+    require => [Group['hydra']]
+  }
+
+  User['vagrant']  { groups  +> ["hydra", "rvm"] }
+
+rvm_gemset {
+  "ruby-1.9.3-p0@hydradam":
+    ensure => present,
+    require => Rvm_system_ruby['ruby-1.9.3-p0'];
+}
+  
+
 
   user { 'jetty':
     ensure  => present,
@@ -20,6 +35,15 @@ class hydradam {
     home    => '/wgbh/http/hydradam/hydra-app',
     gid     => 'jetty',
     require => [Group['jetty']]
+  }
+
+  file { "/var/www/hydradam":
+    ensure  => directory,
+    group   => 'hydra',
+    owner    => 'hydradam',
+    mode    => 775,
+    require => [User['hydradam']]
+
   }
 
   file {
