@@ -79,6 +79,14 @@ class PbcoreDocument < ActiveFedora::NokogiriDatastream
     t.contributor_name(:proxy=>[:contributor, :name])
     t.contributor_role(:proxy=>[:contributor, :role])
 
+    # creator names and roles
+    t.creator(:path=>"pbcoreCreator", :namespace_prefix=>nil) {
+      t.name_(:path=>"creator", :namespace_prefix=>nil)
+      t.role_(:path=>"creatorRole", :namespace_prefix=>nil, :attributes=>{ :source=>"MARC relator terms" })
+    }
+    t.creator_name(:proxy=>[:creator, :name])
+    t.creator_role(:proxy=>[:creator, :role])
+
     # Publisher names and roles
     t.publisher(:path=>"pbcorePublisher", :namespace_prefix=>nil) {
       t.name_(:path=>"publisher", :namespace_prefix=>nil)

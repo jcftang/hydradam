@@ -5,6 +5,13 @@ Hydradam::Application.routes.draw do
   root :to => "catalog#index"
 
 # My routes go here
+  resources :generic_files
+
+  resources :generic_files do
+    member do
+      post 'audit'
+    end
+  end
   # Routes for subjects and pbcore controller
   resources :assets do
     resources :subjects, :only=>[:new,:create]
