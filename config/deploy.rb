@@ -11,6 +11,7 @@ set :repository, "git://github.com/WGBH/hydradam.git"
 set :branch, "master"
 set :deploy_via, :remote_cache
 set :git_enable_submodules, 1
+set :group_writable, true
 
 $:.unshift(File.expand_path('./lib', ENV['rvm_path']))
 require "rvm/capistrano"  
@@ -38,6 +39,12 @@ desc "Compile asets"
     run "cd #{release_path}; RAILS_ENV=development bundle exec rake assets:clean assets:precompile"
   end
   
+  namespace :permissions do
+    task :fix do
+      sudo "chown -R hydradam:hydra #{latest_release}"
+      sudo "chown -R hydradam:hydra #{deploy_to}/shared"
+    end
+  end
 
 end
 
@@ -49,7 +56,20 @@ namespace :passenger do
 end
 
 
-after :deploy, "passenger:restart"
+# Make sure the gemset exists before running deploy:setup
+def disable_rvm_shell(&block)
+  old_shell = self[:default_shell]
+  self[:default_shell] = nil
+  yield
+  self[:default_shell] = old_shell
+end
 
-after :deploy, "deploy:assets"
+task :create_gemset do
+  disable_rvm_shell { run "rvm use #{rvm_ruby_string} --create" }
+end
+
+before "deploy:setup", "create_gemset"
+before :deploy, "deploy:setup"
+after :deploy,  "deploy:assets", "deploy:permissions:fix","passenger:restart"
+
 

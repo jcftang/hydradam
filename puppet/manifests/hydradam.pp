@@ -42,7 +42,24 @@ rvm_gemset {
     group   => 'hydra',
     owner    => 'hydradam',
     mode    => 775,
-    require => [User['hydradam']]
+    require => [User['hydradam'], Class['apache']];
+
+    "/var/www/hydradam/shared":
+      ensure  => directory,
+      group   => 'hydra',
+      owner   => 'hydradam',
+      mode    => 775,
+      require => File["/var/www/hydradam"];
+
+    "/var/www/hydradam/releases":
+      ensure  => directory,
+      group   => 'hydra',
+      owner   => 'hydradam',
+      mode    => 775,
+      require => File["/var/www/hydradam"];
+  }
+
+  exec { '/usr/sbin/setenforce 0':
 
   }
 
@@ -50,6 +67,11 @@ rvm_gemset {
     "/etc/init.d/jetty.sh":
       mode    => "0755",
       content => template("jetty/jetty.erb")
+  }
+
+  apache::vhost { 'hydradam':
+    port    => '80',
+    docroot => '/var/www/hydradam/current/public'
   }
 
   file { "/etc/default":
