@@ -63,6 +63,9 @@ rvm_gemset {
 
   }
 
+  exec { 'chkconfig iptables off; service iptables stop':
+  }
+
   file {
     "/etc/init.d/jetty.sh":
       mode    => "0755",
