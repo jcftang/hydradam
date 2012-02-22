@@ -69,9 +69,42 @@ rvm_gemset {
       content => template("jetty/jetty.erb")
   }
 
+define line($file, $line, $ensure = 'present') {
+    case $ensure {
+        default : { err ( "unknown ensure value ${ensure}" ) }
+        present: {
+            exec { "/bin/echo '${line}' >> '${file}'":
+                unless => "/bin/grep -qFx '${line}' '${file}'"
+            }
+        }
+        absent: {
+            exec { "/bin/grep -vFx '${line}' '${file}' | /usr/bin/tee '${file}' > /dev/null 2>&1":
+              onlyif => "/bin/grep -qFx '${line}' '${file}'"
+            }
+
+            # Use this resource instead if your platform's grep doesn't support -vFx;
+            # note that this command has been known to have problems with lines containing quotes.
+            # exec { "/usr/bin/perl -ni -e 'print unless /^\\Q${line}\\E\$/' '${file}'":
+            #     onlyif => "/bin/grep -qFx '${line}' '${file}'"
+            # }
+        }
+    }
+}
+  file { "/etc/httpd/conf.d/vhosts":
+    before => File["/etc/httpd/conf.d//vhosts/25-hydradam.conf"],
+    ensure => directory
+  }
+
+  line { "vhosts at end of file":
+    file    => "/etc/httpd/conf/httpd.conf",
+    line    => "Include conf.d/vhosts/*.conf",
+    require => File['/etc/httpd/conf.d/vhosts']
+  }
+
   apache::vhost { 'hydradam':
-    port    => '80',
-    docroot => '/var/www/hydradam/current/public'
+    port     => '80',
+    docroot  => '/var/www/hydradam/current/public',
+    priority => 'vhosts/25',
   }
 
   file { "/etc/default":
