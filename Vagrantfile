@@ -25,9 +25,17 @@ Vagrant::Config.run do |config|
  #    chef.add_recipe("dam")
  # end
   #
+  config.vm.network :hostonly, "33.33.33.10"
+
   config.vm.provision :puppet do |puppet|
     puppet.manifest_file = "dam.pp"
     puppet.manifests_path = 'puppet/manifests'
     puppet.module_path = 'puppet/modules'
   end
+
+  config.vm.customize [
+    "modifyvm", :id,
+    "--name", "Hydradam VM",
+    "--memory", "2048"
+  ]
 end
