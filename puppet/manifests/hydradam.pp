@@ -101,7 +101,8 @@ define line($file, $line, $ensure = 'present') {
   line { "vhosts at end of file":
     file    => "/etc/httpd/conf/httpd.conf",
     line    => "Include conf.d/vhosts/*.conf",
-    require => File['/etc/httpd/conf.d/vhosts']
+    require => Apache::Vhost['hydradam'],
+    notify  => Service['httpd']
   }
 
   apache::vhost { 'hydradam':
