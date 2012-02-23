@@ -51,6 +51,7 @@ end
 namespace :passenger do
   desc "Restart Application"  
   task :restart do  
+    sudo "/sbin/service httpd reload"
     run "touch #{current_path}/tmp/restart.txt"  
   end
 end
