@@ -63,7 +63,7 @@ rvm_gemset {
 
   }
 
-  exec { 'chkconfig iptables off; service iptables stop':
+  exec { '/sbin/chkconfig iptables off; /sbin/service iptables stop':
   }
 
   file {
