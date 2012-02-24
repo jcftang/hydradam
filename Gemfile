@@ -56,4 +56,5 @@ group :development, :test do
   gem 'bcrypt-ruby'
   gem "jettywrapper"
   gem "capistrano"
+  gem "vagrant"
 end
