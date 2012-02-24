@@ -59,9 +59,7 @@ rvm_gemset {
       require => File["/var/www/hydradam"];
   }
 
-  exec { '/usr/sbin/setenforce 0':
-
-  }
+  #exec { '/usr/sbin/setenforce 0': }
 
   exec { '/sbin/chkconfig iptables off; /sbin/service iptables stop':
   }
