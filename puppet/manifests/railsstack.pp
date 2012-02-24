@@ -12,27 +12,27 @@ class railsstack {
   include rvm
 
   rvm_system_ruby {
-    'ruby-1.9.3-p0':
+    'ruby-1.9.3-p125':
       ensure      => 'present',
       default_use => false;
   }
 
   rvm_gem {
-    'ruby-1.9.3-p0@global/bundler':
-      require => Rvm_system_ruby['ruby-1.9.3-p0'];
-    'ruby-1.9.3-p0@global/rails':
-      require => Rvm_system_ruby['ruby-1.9.3-p0'];
-    'ruby-1.9.3-p0/puppet':
-      require => Rvm_system_ruby['ruby-1.9.3-p0'];
-    'ruby-1.9.3-p0/passenger':
-      require => Rvm_system_ruby['ruby-1.9.3-p0'];
+    'ruby-1.9.3-p125@global/bundler':
+      require => Rvm_system_ruby['ruby-1.9.3-p125'];
+    'ruby-1.9.3-p125@global/rails':
+      require => Rvm_system_ruby['ruby-1.9.3-p125'];
+    'ruby-1.9.3-p125/puppet':
+      require => Rvm_system_ruby['ruby-1.9.3-p125'];
+    'ruby-1.9.3-p125/passenger':
+      require => Rvm_system_ruby['ruby-1.9.3-p125'];
   }
 
   class {
     'rvm::passenger::apache':
-      ruby_version => 'ruby-1.9.3-p0',
+      ruby_version => 'ruby-1.9.3-p125',
       version      => '3.0.11',
-      require      => Rvm_gem['ruby-1.9.3-p0/passenger']
+      require      => Rvm_gem['ruby-1.9.3-p125/passenger']
   }
 
   

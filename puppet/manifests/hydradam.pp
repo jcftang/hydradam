@@ -22,9 +22,9 @@ class hydradam {
   User['vagrant']  { groups  +> ["hydra", "rvm"] }
 
 rvm_gemset {
-  "ruby-1.9.3-p0@hydradam":
+  "ruby-1.9.3-p125@hydradam":
     ensure => present,
-    require => Rvm_system_ruby['ruby-1.9.3-p0'];
+    require => Rvm_system_ruby['ruby-1.9.3-p125'];
 }
   
 
