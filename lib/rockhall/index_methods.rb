@@ -1,4 +1,0 @@
-module Rockhall::IndexMethods
-
-
-end
