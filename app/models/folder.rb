@@ -1,4 +1,4 @@
-require "psu-customizations"
+require "psu"
 
 class Folder < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
