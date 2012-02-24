@@ -43,6 +43,8 @@ desc "Compile asets"
     task :fix do
       sudo "chown -R hydradam:hydra #{latest_release}"
       sudo "chown -R hydradam:hydra #{deploy_to}/shared"
+      #sudo "chown -R vagrant:hydra #{deploy_to}/shared/cached-copy"
+      sudo "chmod -R g+w #{deploy_to}/shared/cached-copy" 
     end
   end
 
