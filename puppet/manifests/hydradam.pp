@@ -31,8 +31,8 @@ rvm_gemset {
 
   user { 'jetty':
     ensure  => present,
-    shell   => '/sbin/nologin',
-    home    => '/wgbh/http/hydradam/hydra-app',
+    shell   => '/bin/bash',
+    home    => '/var/www/hydradam/hydra-jetty',
     gid     => 'jetty',
     require => [Group['jetty']]
   }
@@ -67,7 +67,14 @@ rvm_gemset {
   file {
     "/etc/init.d/jetty.sh":
       mode    => "0755",
-      content => template("jetty/jetty.erb")
+      content => template("jetty/jetty.erb"),
+      require => Exec['checkout hydra-jetty']
+  }
+
+  file { "/var/www/hydradam/hydra-jetty/etc/jetty-logging.xml":
+    mode    => "0644",
+    content => template("jetty/jetty-logging.xml"),
+    require => Exec['checkout hydra-jetty']
   }
 
 define line($file, $line, $ensure = 'present') {
@@ -91,6 +98,23 @@ define line($file, $line, $ensure = 'present') {
         }
     }
 }
+
+  exec { "checkout hydra-jetty":
+    creates => "/var/www/hydradam/hydra-jetty",
+    command => "git clone git://github.com/projecthydra/hydra-jetty.git",
+    cwd     => "/var/www/hydradam",
+    path    => "/usr/bin:/bin"
+  }
+
+  exec { "chown hydra-jetty":
+    command => "/bin/chown -R jetty /var/www/hydradam/hydra-jetty",
+    require => [Exec['checkout hydra-jetty'], User['jetty']]
+  }
+
+  exec { "/usr/bin/sudo /sbin/chkconfig jetty.sh on; /usr/bin/sudo /sbin/service jetty.sh start": 
+    require => [File['/etc/init.d/jetty.sh'], Exec['chown hydra-jetty']]
+  }
+
   file { "/etc/httpd/conf.d/vhosts":
     before => File["/etc/httpd/conf.d//vhosts/25-hydradam.conf"],
     ensure => directory
@@ -114,7 +138,7 @@ define line($file, $line, $ensure = 'present') {
 
     "/etc/default/jetty":
       require  => [User['jetty'],File['/etc/default']],
-      content => "JETTY_HOME=/wgbh/http/hydradam/hydra-jetty\nJETTY_USER=jetty"
+      content => "JETTY_HOME=/var/www/hydradam/hydra-jetty\nJETTY_USER=jetty"
   }
 
 }
