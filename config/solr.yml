@@ -7,4 +7,4 @@ test: &TEST
 cucumber:
   <<: *TEST
 production:
-  url: http://33.33.33.10:8983/solr/production
+  url: http://33.33.33.10:8983/solr/development
