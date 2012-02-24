@@ -112,7 +112,7 @@ define line($file, $line, $ensure = 'present') {
   }
 
   exec { "/usr/bin/sudo /sbin/chkconfig jetty.sh on; /usr/bin/sudo /sbin/service jetty.sh start": 
-    require => [File['/etc/init.d/jetty.sh'], Exec['chown hydra-jetty']]
+    require => [File['/etc/init.d/jetty.sh'], Exec['chown hydra-jetty'], File["/etc/default/jetty"]]
   }
 
   file { "/etc/httpd/conf.d/vhosts":
