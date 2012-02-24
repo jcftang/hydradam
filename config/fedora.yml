@@ -3,6 +3,6 @@ development:
 test: &TEST  
   url: http://fedoraAdmin:fedoraAdmin@127.0.0.1:8983/fedora
 production:
-  url: http://fedoraAdmin:fedoraAdmin@your.production.server:8080/fedora
+  url: http://fedoraAdmin:fedoraAdmin@33.33.33.10:8983/fedora
 cucumber:
   <<: *TEST
