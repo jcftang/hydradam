@@ -12,8 +12,8 @@ Vagrant::Config.run do |config|
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  config.vm.box = "centos6"
-  config.vm.box_url = "http://packages.vstone.eu/vagrant-boxes/centos/6/centos-6.2-64bit-puppet-vbox.4.1.8.box"
+  config.vm.box = "centos-62"
+  #config.vm.box_url = "http://packages.vstone.eu/vagrant-boxes/centos/6/centos-6.2-64bit-puppet-vbox.4.1.8.box"
   #config.vm.box = "lucid32"
   #config.vm.box_url = "http://files.vagrantup.com/lucid32.box"
 
