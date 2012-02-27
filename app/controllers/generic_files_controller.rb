@@ -13,7 +13,6 @@ class GenericFilesController < ApplicationController
 
   def create
     @generic_file = GenericFile.new(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
-    process_files
     apply_depositor_metadata(@generic_file)
     
     if (@generic_file.save)

@@ -20,12 +20,14 @@
   <body onload="<%= onload_text %>" class="<%= render_body_class.html_safe %>">
     <div id="page">
       <div id="hd">
+        <div class="navbar-inner">
         <div id="logo">
           <h1 class="site_title"><%= link_to application_name, "/" %><%= (params[:controller] == "catalog" and !params[:id]) ? "<span id='results_text'>Search Results</span>".html_safe : "" %></h1>
         </div>
         <div id="user_util_links">
           <%= render :partial=>'/user_util_links' %>
         </div>
+      </div>
       </div>
       <div id="bd">
         <div id="main">

@@ -1,0 +1,71 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *
+ *= require_tree .
+*/
+
+@import "compass_twitter_bootstrap";
+@import "compass_twitter_bootstrap/layouts";
+
+#page {
+  @extend .container;
+  padding-top: 90px;
+}
+
+#bd {
+  @extend .container;
+}
+
+#hd {
+  @extend .navbar;
+  @extend .navbar-fixed-top;
+}
+
+#logo {
+  display: none;
+}
+
+#user_util_links {
+  @extend .container;
+}
+
+
+#sidebar {
+  @extend .span2; 
+}
+
+#main {
+  @extend .span10;
+}
+
+.new_user {
+
+  br { display: none; }
+}
+
+#documents table {
+  @extend .table;
+  @extend .table-striped;
+}
+
+#search {
+  @extend .form-search;
+
+  input[type="text"] {
+    @extend .search-query;
+  }  
+
+  #submit {
+    @extend .icon-search;
+    @extend .btn-primary;
+  }
+}

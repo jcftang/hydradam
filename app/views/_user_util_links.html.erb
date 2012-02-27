@@ -1,0 +1,12 @@
+<ul class="nav">
+  <% if current_user %>
+  <%= render :partial=>"/add_assets_links" %>
+   <li class="divider-vertical"></li>
+    <li> <%= link_to 'Your Bookmarks', bookmarks_path %></li>
+    <li><%= link_to "Saved Searches", saved_searches_path %></li>
+  <% else %>
+    <li><%= link_to 'Login', new_user_session_path %></li>
+  <% end %>
+  <li><%= link_to "Selected Items", folder_index_path %> (<span id="folder_number"><%= "#{session[:folder_document_ids] ? session[:folder_document_ids].length : 0}" %></span>)</li>
+  <li><%= link_to "Search History", search_history_path %></li>
+</ul>

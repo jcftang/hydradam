@@ -23,6 +23,8 @@ end
 
 gem 'sass-rails',   '~> 3.2.3'
 gem 'jquery-rails'
+gem 'compass_twitter_bootstrap'
+gem 'compass-rails'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

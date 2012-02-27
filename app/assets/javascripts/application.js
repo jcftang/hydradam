@@ -20,3 +20,7 @@
 //= require jquery-ui
 //= require blacklight/blacklight
 //= require_tree .
+//
+$(function() {
+  $(".alert").append('<a class="close" data-dismiss="alert" href="#">&times;</a>').alert();
+});
