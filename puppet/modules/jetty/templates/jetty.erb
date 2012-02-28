@@ -540,7 +540,7 @@ case "$ACTION" in
           then
               touch $JETTY_PID
               chown $JETTY_USER $JETTY_PID
-              su - $JETTY_USER -c "
+              su $JETTY_USER -c "
                 $RUN_CMD &
                 PID=\$!
                 disown \$PID
