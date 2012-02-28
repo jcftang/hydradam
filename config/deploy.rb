@@ -36,17 +36,24 @@ server domain, :app, :web, :db, :fedora
 namespace :deploy do
 desc "Compile asets"
   task :assets do
-    run "cd #{release_path}; RAILS_ENV=development bundle exec rake assets:clean assets:precompile"
+    run "cd #{release_path}; RAILS_ENV=production bundle exec rake assets:clean assets:precompile"
+  end
+
+  task :chown do
+    sudo "chown -R vagrant:hydra /var/www/hydradam"
+  end
+
+  namespace :jetty do
+  desc "add ./jetty symlink "
+  task :symlink do
+    run "ln -s /var/www/hydradam/hydra-jetty #{release_path}/jetty"
+  end
+
+  task :config do
+    run "cd #{release_path}; bundle exec rake hydra:jetty:config"
+  end
   end
   
-  namespace :permissions do
-    task :fix do
-      sudo "chown -R hydradam:hydra #{latest_release}"
-      sudo "chown -R hydradam:hydra #{deploy_to}/shared"
-      #sudo "chown -R vagrant:hydra #{deploy_to}/shared/cached-copy"
-      sudo "chmod -R g+w #{deploy_to}/shared/cached-copy" 
-    end
-  end
 
 end
 
@@ -58,6 +65,13 @@ namespace :passenger do
   end
 end
 
+
+namespace :jetty do
+  desc "Restart Application"  
+  task :restart do  
+    sudo "/sbin/service jetty.sh restart"
+  end
+end
 namespace :rvm do
   desc 'Trust rvmrc file'
   task :trust_rvmrc do
@@ -82,6 +96,11 @@ end
 
 before "deploy:setup", "create_gemset"
 before :deploy, "deploy:setup"
-after :deploy,  "deploy:assets", "deploy:permissions:fix","passenger:restart"
+
+before "deploy:jetty:config", "deploy:jetty:symlink"
+after "deploy:jetty:config", "jetty:restart"
+
+after :deploy,  "deploy:assets", "deploy:jetty:config", "deploy:chown", "passenger:restart"
+after "deploy:migrate", "passenger:restart"
 
 
