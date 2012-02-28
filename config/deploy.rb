@@ -100,7 +100,7 @@ before :deploy, "deploy:setup"
 before "deploy:jetty:config", "deploy:jetty:symlink"
 after "deploy:jetty:config", "jetty:restart"
 
-after :deploy,  "deploy:assets", "deploy:jetty:config", "deploy:chown", "passenger:restart"
+after :deploy,  "deploy:assets", "deploy:chown", "deploy:jetty:config", "passenger:restart"
 after "deploy:migrate", "passenger:restart"
 
 

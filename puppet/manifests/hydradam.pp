@@ -6,14 +6,6 @@ class hydradam {
   }
 
 
-  user { 'hydradam':
-    ensure  => present,
-    shell   => '/bin/bash',
-    home    => '/var/www/hydradam',
-    groups  => ['hydra','rvm'],
-    require => [Group['hydra']]
-  }
-
   user { 'vagrant':
     ensure  => present,
     require => [Group['hydra']]
@@ -27,34 +19,24 @@ rvm_gemset {
     require => Rvm_system_ruby['ruby-1.9.3-p125'];
 }
   
-
-
-  user { 'jetty':
-    ensure  => present,
-    shell   => '/bin/bash',
-    home    => '/var/www/hydradam/hydra-jetty',
-    gid     => 'jetty',
-    require => [Group['jetty']]
-  }
-
   file { "/var/www/hydradam":
     ensure  => directory,
     group   => 'hydra',
-    owner    => 'hydradam',
+    owner    => 'vagrant',
     mode    => 775,
-    require => [User['hydradam'], Class['apache']];
+    require => [Class['apache']];
 
     "/var/www/hydradam/shared":
       ensure  => directory,
       group   => 'hydra',
-      owner   => 'hydradam',
+      owner   => 'vagrant',
       mode    => 775,
       require => File["/var/www/hydradam"];
 
     "/var/www/hydradam/releases":
       ensure  => directory,
       group   => 'hydra',
-      owner   => 'hydradam',
+      owner   => 'vagrant',
       mode    => 775,
       require => File["/var/www/hydradam"];
   }
@@ -106,13 +88,8 @@ define line($file, $line, $ensure = 'present') {
     path    => "/usr/bin:/bin"
   }
 
-  exec { "chown hydra-jetty":
-    command => "/bin/chown -R jetty /var/www/hydradam/hydra-jetty",
-    require => [Exec['checkout hydra-jetty'], User['jetty']]
-  }
-
   exec { "/usr/bin/sudo /sbin/chkconfig jetty.sh on; /usr/bin/sudo /sbin/service jetty.sh start": 
-    require => [File['/etc/init.d/jetty.sh'], Exec['chown hydra-jetty'], File["/etc/default/jetty"]]
+    require => [File['/etc/init.d/jetty.sh'], File["/etc/default/jetty"]]
   }
 
   file { "/etc/httpd/conf.d/vhosts":
@@ -128,17 +105,17 @@ define line($file, $line, $ensure = 'present') {
   }
 
   apache::vhost { 'hydradam':
-    port     => '80',
-    docroot  => '/var/www/hydradam/current/public',
-    priority => 'vhosts/25',
+    port                => '80',
+    docroot             => '/var/www/hydradam/current/public',
+    priority            => 'vhosts/25'
   }
 
   file { "/etc/default":
       ensure => directory;
 
     "/etc/default/jetty":
-      require  => [User['jetty'],File['/etc/default']],
-      content => "JETTY_HOME=/var/www/hydradam/hydra-jetty\nJETTY_USER=jetty"
+      require  => [File['/etc/default']],
+      content => "JETTY_HOME=/var/www/hydradam/hydra-jetty\nJETTY_USER=vagrant"
   }
 
 }
