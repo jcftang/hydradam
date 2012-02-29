@@ -1,4 +1,8 @@
 class hydradam {
+
+  include hydrajetty
+  include servicemix
+
   group { 'hydra':
     ensure => present;
     'jetty':
@@ -46,18 +50,8 @@ rvm_gemset {
   exec { '/sbin/chkconfig iptables off; /sbin/service iptables stop':
   }
 
-  file {
-    "/etc/init.d/jetty.sh":
-      mode    => "0755",
-      content => template("jetty/jetty.erb"),
-      require => Exec['checkout hydra-jetty']
-  }
 
-  file { "/var/www/hydradam/hydra-jetty/etc/jetty-logging.xml":
-    mode    => "0644",
-    content => template("jetty/jetty-logging.xml"),
-    require => Exec['checkout hydra-jetty']
-  }
+
 
 define line($file, $line, $ensure = 'present') {
     case $ensure {
@@ -80,18 +74,6 @@ define line($file, $line, $ensure = 'present') {
         }
     }
 }
-
-  exec { "checkout hydra-jetty":
-    creates => "/var/www/hydradam/hydra-jetty",
-    command => "git clone git://github.com/projecthydra/hydra-jetty.git",
-    cwd     => "/var/www/hydradam",
-    path    => "/usr/bin:/bin"
-  }
-
-  exec { "/usr/bin/sudo /sbin/chkconfig jetty.sh on; /usr/bin/sudo /sbin/service jetty.sh start": 
-    require => [File['/etc/init.d/jetty.sh'], File["/etc/default/jetty"]]
-  }
-
   file { "/etc/httpd/conf.d/vhosts":
     before => File["/etc/httpd/conf.d//vhosts/25-hydradam.conf"],
     ensure => directory
@@ -108,14 +90,6 @@ define line($file, $line, $ensure = 'present') {
     port                => '80',
     docroot             => '/var/www/hydradam/current/public',
     priority            => 'vhosts/25'
-  }
-
-  file { "/etc/default":
-      ensure => directory;
-
-    "/etc/default/jetty":
-      require  => [File['/etc/default']],
-      content => "JETTY_HOME=/var/www/hydradam/hydra-jetty\nJETTY_USER=vagrant"
   }
 
 }

@@ -69,7 +69,7 @@ end
 namespace :jetty do
   desc "Restart Application"  
   task :restart do  
-    sudo "/sbin/service jetty.sh restart"
+    sudo "/sbin/service jetty restart"
   end
 end
 namespace :rvm do
