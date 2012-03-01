@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint
+    xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+      http://www.osgi.org/xmlns/blueprint/v1.0.0
+      http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+    <camelContext xmlns="http://camel.apache.org/schema/blueprint" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:access="http://www.fedora.info/definitions/1/0/access/">
+
+      <route>
+        <from uri="activemq:topic:fedora.apim.update"/>
+        <to uri="log:apim" />
+        <setHeader headerName="pid">
+          <xpath resultType="java.lang.String">//atom:category[@scheme="fedora-types:pid"]/@term</xpath>
+        </setHeader>
+
+
+        <multicast>
+          <pipeline>
+            <transform>
+              <xpath resultType="java.lang.String">concat(//atom:author/atom:uri, '/objects/', //atom:category[@scheme="fedora-types:pid"]/@term)</xpath>
+            </transform>
+            <to uri="activemq:topic:fedora.object.changed" />
+          </pipeline>
+
+          <pipeline>
+        <choice>
+          <when>
+            <!-- route datastream changed messages to the fedora.datastream.changed topic -->
+            <xpath>//atom:title[text() = 'addDatastream' or text() = 'modifyDatastreamByValue' or text() = 'modifyDatastreamByReference']</xpath>
+            <setHeader headerName="dsid">
+              <xpath resultType="java.lang.String">//atom:category[@scheme="fedora-types:dsID"]/@term</xpath>
+            </setHeader>
+          
+            <transform>
+              <xpath resultType="java.lang.String">concat(//atom:author/atom:uri, '/objects/', //atom:category[@scheme="fedora-types:pid"]/@term, "/datastreams/", //atom:category[@scheme="fedora-types:dsID"]/@term)</xpath>
+            </transform>
+          
+            <to uri="activemq:topic:fedora.datastream.changed" />
+          </when>
+          <when>
+            <!-- route ingest messages to the fedora.object.created topic -->
+            <xpath>//atom:title[text() = 'ingest']</xpath> 
+
+            <transform>
+              <xpath resultType="java.lang.String">concat(//atom:author/atom:uri, '/objects/', //atom:content)</xpath>
+            </transform>
+
+            <to uri="activemq:topic:fedora.object.created" />
+          </when>
+          <when>
+            <!-- route pruge messages to the fedora.object.purged topic -->
+            <xpath>//atom:title[text() = 'purgeObject']</xpath> 
+
+            <transform>
+              <xpath resultType="java.lang.String">concat(//atom:author/atom:uri, '/objects/', //atom:category[@scheme="fedora-types:pid"]/@term)</xpath>
+            </transform>
+
+            <to uri="activemq:topic:fedora.object.purged" />
+          </when>
+        </choice>
+      </pipeline>
+    </multicast>
+      </route>
+
+     
+      <!-- when an object is created, send fedora.datastream.changed messages for each new datastream -->
+      <route>
+        <from uri="activemq:topic:fedora.object.created" />
+        <setHeader headerName="ObjectUrl">
+          <simple>${body}</simple>
+        </setHeader>
+
+        <setHeader headerName="CamelHttpUri">
+          <simple>${body}/datastreams?format=xml</simple>
+        </setHeader>
+        <to uri="http://local.fedora.server" />
+
+        <setHeader headerName="pid">
+          <simple>${header:pid}</simple>
+        </setHeader>
+
+        <split>
+          <xpath>//access:datastream</xpath>
+          <setHeader headerName="dsid">
+          <xpath resultType="java.lang.String">//access:datastream/@dsid</xpath>
+        </setHeader>
+          <transform>
+            <xpath resultType="java.lang.String">concat(in:header('ObjectUrl'), '/datastreams/', //access:datastream/@dsid)</xpath>
+          </transform>
+          <to uri="activemq:topic:fedora.datastream.changed" />
+        </split>
+      </route>
+
+    </camelContext>
+  </blueprint>

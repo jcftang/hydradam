@@ -43,6 +43,13 @@ desc "Compile asets"
     sudo "chown -R vagrant:hydra /var/www/hydradam"
   end
 
+  namespace :camel do
+    desc "deploy camel routes"
+    task :routes do
+      run "rsync -avz --delete #{release_path}/camel/deploy/* /var/www/hydradam/servicemix/deploy"
+    end
+  end
+
   namespace :jetty do
   desc "add ./jetty symlink "
   task :symlink do
@@ -124,7 +131,7 @@ before :deploy, "deploy:setup"
 before "deploy:jetty:config", "deploy:jetty:symlink"
 after "deploy:jetty:config", "jetty:restart"
 
-after :deploy,  "deploy:assets", "deploy:chown", "deploy:jetty:config", "passenger:restart"
+after :deploy,  "deploy:assets", "deploy:camel:routes", "deploy:chown", "deploy:jetty:config", "passenger:restart"
 after "deploy:migrate", "passenger:restart"
 
 
