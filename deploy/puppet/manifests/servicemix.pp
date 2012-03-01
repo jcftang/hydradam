@@ -25,11 +25,13 @@ class servicemix {
   define extract_file(
     $destdir="",
     $creates="",
+    $user="",
     $to
   ) {
     exec { $name:
       command => "tar -xvz -C ${destdir} -f ${name}",
       path    => "/usr/bin:/bin",
+      user    => "${user}",
       creates => "${destdir}/${creates}",                                                              
     }
 
@@ -58,12 +60,8 @@ class servicemix {
     destdir => "/var/www/hydradam",
     creates => "apache-servicemix-4.4.1-fuse-02-05",
     to      => '/var/www/hydradam/servicemix',
+    user    => 'vagrant',
     require => [File["/tmp/apache-servicemix-fuse.tar.gz"], File['/var/www/hydradam']]
-  }
-
-  exec { '/bin/chown -R vagrant /var/www/hydradam/servicemix':
-    require => File["/var/www/hydradam/servicemix"],
-    before  => Exec["start servicemix service"]
   }
 
   file {

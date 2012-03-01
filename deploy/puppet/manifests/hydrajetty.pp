@@ -20,10 +20,12 @@ class hydrajetty {
     command => "git clone git://github.com/projecthydra/hydra-jetty.git",
     cwd     => "/var/www/hydradam",
     path    => "/usr/bin:/bin",
+    user    => 'vagrant',
     require => File['/var/www/hydradam']
   }
 
-  exec { "/usr/bin/sudo /sbin/chkconfig jetty on; /usr/bin/sudo /sbin/service jetty start": 
+  exec { 'start jetty service':
+    command => "/usr/bin/sudo /sbin/chkconfig jetty on; /usr/bin/sudo /sbin/service jetty start", 
     require => [File['/etc/init.d/jetty'], File["/etc/default/jetty"]]
   }
 
@@ -34,7 +36,5 @@ class hydrajetty {
       require  => [File['/etc/default']],
       content => "JETTY_HOME=/var/www/hydradam/hydra-jetty\nJETTY_USER=vagrant"
   }
-
-
 
 }
