@@ -10,7 +10,6 @@
 
       <route>
         <from uri="activemq:topic:fedora.apim.update"/>
-        <to uri="log:apim" />
         <setHeader headerName="pid">
           <xpath resultType="java.lang.String">//atom:category[@scheme="fedora-types:pid"]/@term</xpath>
         </setHeader>
