@@ -28,6 +28,13 @@ $ vagrant box add 'hydradam' centos-62.box
 $ vagrant up
 ```
 
+1. Load the Vagrant ssh config into your `.ssh/config` (setting up a host name alias and private key config):
+
+```bash
+$ vagrant ssh-config >> ~/.ssh/config
+
+```
+
 1. Deploy the Rails application
 
 ```bash
