@@ -1,6 +1,6 @@
 set :application, "hydradam"
 set :deploy_to, "/var/www/#{application}"
-set :domain, 'vagrant'
+set :domain, (ENV['name'] || 'hydradam')
 
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
