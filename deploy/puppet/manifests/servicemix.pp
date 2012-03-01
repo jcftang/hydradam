@@ -117,6 +117,39 @@ exit 0
     require => [File['/etc/init.d/servicemix'], File["/var/www/hydradam/servicemix"]]
   }
 
+  file {
+    "/var/www/hydradam/servicemix/etc/org.apache.karaf.features.cfg":
+    content => "################################################################################
+#
+#    Licensed to the Apache Software Foundation (ASF) under one or more
+#    contributor license agreements.  See the NOTICE file distributed with
+#    this work for additional information regarding copyright ownership.
+#    The ASF licenses this file to You under the Apache License, Version 2.0
+#    (the "License"); you may not use this file except in compliance with
+#    the License.  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
+################################################################################
+
+#
+# Comma separated list of features repositories to register by default
+#
+featuresRepositories=mvn:org.apache.karaf.assemblies.features/standard/2.2.2-fuse-03-05/xml/features,mvn:org.apache.karaf.assemblies.features/enterprise/2.2.2-fuse-03-05/xml/features,mvn:org.apache.servicemix.nmr/apache-servicemix-nmr/1.5.1-fuse-02-05/xml/features,mvn:org.apache.servicemix/apache-servicemix/4.4.1-fuse-02-05/xml/features,mvn:org.apache.camel.karaf/apache-camel/2.8.0-fuse-02-05/xml/features,mvn:org.apache.activemq/activemq-karaf/5.5.1-fuse-02-05/xml/features
+
+#
+# Comma separated list of features to install at startup
+#
+featuresBoot=karaf-framework,config,xml-specs,activemq-broker,activemq-spring,camel,camel-activemq,camel-nmr,saaj,camel-cxf,camel-blueprint,jbi-cluster,war,servicemix-cxf-bc,servicemix-file,servicemix-ftp,servicemix-http,servicemix-jms,servicemix-mail,servicemix-smpp,servicemix-snmp,servicemix-vfs,servicemix-bean,servicemix-camel,servicemix-cxf-se,servicemix-drools,servicemix-eip,servicemix-osworkflow,servicemix-quartz,servicemix-scripting,servicemix-validation,servicemix-saxon,servicemix-wsn2005,camel-http",
+    require => [File["/var/www/hydradam/servicemix"]]
+  }
+
 }
 
 include servicemix
