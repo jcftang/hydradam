@@ -5,6 +5,10 @@ class railsstack {
   include apache
   include sqlite
 
+  package { 'expect':
+    ensure => present
+  }
+
   class { 'java':
     distribution => 'java-1.6.0-openjdk',
   }

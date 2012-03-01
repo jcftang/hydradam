@@ -50,7 +50,31 @@ desc "Compile asets"
   end
 
   task :config do
+    sudo "/sbin/service jetty stop"
     run "cd #{release_path}; bundle exec rake hydra:jetty:config"
+    run <<-EOF
+cd #{release_path}/jetty;
+echo 'spawn fedora/default/server/bin/fedora-rebuild.sh
+
+sleep 2
+expect ">"
+send "1"
+send "\r"
+sleep 1
+expect ">"
+sleep 1
+send "1"
+send "\r"
+expect ">"
+sleep 1
+send "1"
+send "\r"
+wait
+
+' | FEDORA_HOME=`pwd`/fedora/default CATALINA_HOME=`pwd` expect -f -
+
+EOF
+    sudo "/sbin/service jetty start"
   end
   end
   
