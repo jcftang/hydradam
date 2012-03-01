@@ -38,6 +38,11 @@
             </transform>
           
             <to uri="activemq:topic:fedora.datastream.changed" />
+
+            <setHeader headerName="CamelJmsDestinationName">
+              <simple>fedora.datastream.${header:dsid}.changed</simple>
+            </setHeader>
+            <to uri="activemq:topic:fedora.datastream.DUMMY.changed" />
           </when>
           <when>
             <!-- route ingest messages to the fedora.object.created topic -->
@@ -90,6 +95,10 @@
             <xpath resultType="java.lang.String">concat(in:header('ObjectUrl'), '/datastreams/', //access:datastream/@dsid)</xpath>
           </transform>
           <to uri="activemq:topic:fedora.datastream.changed" />
+          <setHeader headerName="CamelJmsDestinationName">
+            <simple>fedora.datastream.${header:dsid}.changed</simple>
+          </setHeader>
+          <to uri="activemq:topic:fedora.datastream.DUMMY.changed" />
         </split>
       </route>
 
