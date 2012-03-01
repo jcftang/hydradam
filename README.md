@@ -4,14 +4,22 @@
 
 Prerequisites:
 
-  - Virtualbox
-  - Ruby 
+  - Oracle VirtualBox
+  - Ruby
+  - bundler gem
 
-1. Install the Gemfile.host gems
+1. Clone the git repository
+
+1. Go to the `deploy` directory
 
 ```bash
-$ gem install bundler
-$ bundle install --gemfile definitions/Gemfile.host
+$ cd ./deploy
+```
+
+1. Use bundler to install the deployment Gemfile
+
+```bash
+$ bundle install
 ```
 
 1. Build the Vagrant box and add it to Vagrant:
