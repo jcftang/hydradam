@@ -44,6 +44,7 @@ gem 'compass-rails'
 gem "devise"
 gem "blacklight", :git   => "git://github.com/projectblacklight/blacklight.git"
 gem "hydra-head", :git   => "git://github.com/projecthydra/hydra-head.git", :branch => '4.0.x'
+gem 'active-fedora', :git=>'git://github.com/mediashelf/active_fedora.git'
 gem "mediainfo"
 gem "noid"
 

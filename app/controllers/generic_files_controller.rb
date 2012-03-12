@@ -9,23 +9,31 @@ class GenericFilesController < ApplicationController
   
   def new
     @generic_file = GenericFile.new 
+    @dc_metadata = [['Title', 'title'], ['Creator', 'creator'], ['Publisher', 'publisher'], ['Description', 'description']]
+  end
+
+  def edit
+    @generic_file = GenericFile.find(params[:id])
   end
 
   def create
-    @generic_file = GenericFile.new(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
-    apply_depositor_metadata(@generic_file)
-    
-    if (@generic_file.save)
-      flash[:success] = "You saved #{@generic_file.title}"
-      redirect_to :action=>"edit", :id=>@generic_file.pid
-    else 
-      flash[:error] = "Unable to save."
-      render :action=>"new"
+    create_and_save_generic_files_from_params
+
+    if @generic_files.empty? 
+      flash[:notice] = "You must specify a file to upload" 
+      redirect_params = {:controller => "generic_files", :action => "new"} 
+    elsif params[:generic_file][:creator].empty?
+      flash[:notice] = "You must include a creator."
+      redirect_params = {:controller => "generic_files", :action => "new"} 
+    else
+      notice = []
+      @generic_files.each do |gf|
+        notice << render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => gf })
+      end
+      flash[:notice] = notice.join("<br/>".html_safe) unless notice.blank?
+      redirect_params = {:controller => "catalog", :action => "index"} 
     end
-  end
-  
-  def edit
-    @generic_file = GenericFile.find(params[:id])
+    redirect_to redirect_params 
   end
 
   def show
@@ -36,28 +44,53 @@ class GenericFilesController < ApplicationController
     @generic_file = GenericFile.find(params[:id])
     render :json=>@generic_file.content.audit
   end
-  
-  protected
-  def process_files
-    @file_assets = create_and_save_file_assets_from_params
-    notice = []
-    @file_assets.each do |file_asset|
-      apply_depositor_metadata(file_asset)
-
-      notice << render_to_string(:partial=>'hydra/file_assets/asset_saved_flash', :locals => { :file_asset => file_asset })
-        
-      if !params[:container_id].nil?
-        associate_file_asset_with_container(file_asset,'info:fedora/' + params[:container_id])
-      end
-
-      ## Apply any posted file metadata
-      unless params[:asset].nil?
-        logger.debug("applying submitted file metadata: #{@sanitized_params.inspect}")
-        apply_file_metadata
-      end
-      # If redirect_params has not been set, use {:action=>:index}
-      logger.debug "Created #{file_asset.pid}."
-    end
-    notice
+ 
+  def update
+    @generic_file = GenericFile.find(params[:id])
+    @generic_file.update_attributes(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
+    flash[:notice] = "Successfully updated." 
+    if params.has_key?(:Filedata) 
+        add_posted_blob_to_asset(generic_file,params[:Filedata])
+    end 
+    render :edit 
   end
+
+  def edit
+    @generic_file = GenericFile.find(params[:id])
+  end
+
+  def show
+    @generic_file = GenericFile.find(params[:id]) 
+  end
+
+  def audit
+    @generic_file = GenericFile.find(params[:id])
+    render :json=>@generic_file.content.audit
+  end
+
+
+  protected
+  # takes form file inputs and assigns meta data individually 
+  # to each generic file asset and saves generic file assets # @param [Hash] of form fields
+  def create_and_save_generic_files_from_params
+    @generic_files = []
+    if params.has_key?(:Filedata)
+      params[:Filedata].each do |file|
+        generic_file = GenericFile.new(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
+        
+        add_posted_blob_to_asset(generic_file,file)
+        apply_depositor_metadata(generic_file)
+        generic_file.label = file.original_filename
+        # Delete this next line when GenericFile.label no longer wipes out the title
+        generic_file.title = params[:generic_file][:title] if params[:generic_file].has_key?(:title) 
+        generic_file.creator = params[:generic_file][:creator] if params[:generic_file].has_key?(:creator)
+        generic_file.contributor = params[:generic_file][:contributor] if params[:generic_file].has_key?(:contributor)
+        generic_file.publisher = params[:generic_file][:publisher] if params[:generic_file].has_key?(:publisher)
+        generic_file.save
+        @generic_files << generic_file
+      end
+    end
+    @generic_files
+  end
+
 end
