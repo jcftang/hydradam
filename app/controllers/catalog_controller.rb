@@ -7,8 +7,14 @@ class CatalogController < ApplicationController
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Catalog
 
+def enforce_solr_permissions(opts={})
+    enforce_edit_permissions(opts)
+  end
+  before_filter :load_fedora_document, :only=>[:show,:edit,:solr]
+  
   # These before_filters apply the hydra access controls
   before_filter :enforce_access_controls
+
 #  before_filter :enforce_viewing_context_for_show_requests, :only=>:show
   # This applies appropriate access controls to all solr queries
   CatalogController.solr_search_params_logic << :add_access_controls_to_solr_params
@@ -150,6 +156,13 @@ class CatalogController < ApplicationController
     # If there are more than this many search results, no spelling ("did you 
     # mean") suggestion is offered.
     config.spell_max = 5
+  end
+
+  def solr
+
+    respond_to do |format|
+      format.xml { render :xml => RSolr::Xml::Generator.new.add(@document_fedora.to_solr) }
+    end
   end
 
   protected

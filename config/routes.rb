@@ -32,6 +32,8 @@ Hydradam::Application.routes.draw do
   match "assets/:asset_id/pbcore/:node/:index" => "pbcore#destroy", :via => :delete
   
 
+  match "catalog/:id/solr" => "catalog#solr"
+
   devise_for :users
 
   # The priority is based upon order of creation:
