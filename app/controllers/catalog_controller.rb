@@ -152,7 +152,9 @@ class CatalogController < ApplicationController
     config.spell_max = 5
   end
 
+  protected
   def load_css; end
+  def load_js; end
 
 
 
