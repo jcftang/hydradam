@@ -4,7 +4,7 @@ describe GenericFilesController do
 
   describe "audit" do
     before do
-      @user = User.create(:login => "testuser", 
+      @user = User.create(
                           :email => "testuser@example.com", 
                           :password => "password",
                           :password_confirmation => "password")
