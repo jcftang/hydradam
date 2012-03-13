@@ -24,4 +24,6 @@
 //
 $(function() {
   $(".alert").append('<a class="close" data-dismiss="alert" href="#">&times;</a>').alert();
+
+  $(".q").attr('placeholder', 'Search');
 });

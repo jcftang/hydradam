@@ -35,11 +35,24 @@
 }
 
 #logo {
+  @extend .brand;
+  h1 { font-size: 16pt; }
+}
+
+#search h2 {
   display: none;
 }
 
+#hd div.search {
+  @extend .navbar-search;
+  @extend .pull-left;
+
+  h2, label, select, input[type="submit"], hr { display: none; }
+
+  .q { @extend .search-query; width: 130px; }
+}
+
 #user_util_links {
-  @extend .container;
 }
 
 
@@ -106,7 +119,7 @@
   @extend .table-striped;
 }
 
-#search {
+#bd div.search {
   @extend .form-search;
 
   input[type="text"] {

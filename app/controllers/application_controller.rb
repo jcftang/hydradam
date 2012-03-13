@@ -9,6 +9,12 @@ class ApplicationController < ActionController::Base
 
   # Please be sure to impelement current_user and user_session. Blacklight depends on 
   # these methods in order to perform user specific actions. 
+  #
+  def blacklight_config
+    CatalogController.blacklight_config
+  end
+
+  helper_method :blacklight_config
 
   protect_from_forgery
 end
