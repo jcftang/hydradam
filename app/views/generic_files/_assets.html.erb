@@ -1,5 +1,8 @@
 <dl id="generic_content_metadata_view" class="type-metadata">
   <dt>View Content</dt>
+
+  <%= render_media_partial @document %>
+
   <dd class="screen-image">
     <% source_url = datastream_disseminator_url(params[:id], "content") %>
     <%= link_to "Download", source_url, :class => "fbImage single-image" %>
