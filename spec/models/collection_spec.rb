@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe Folder do
+describe Collection do
   before(:all) do
     @user = User.create(:login => "testuser", 
                         :email => "testuser@example.com", 
                         :password => "password", 
                         :password_confirmation => "password")
     @file = GenericFile.create
-    @folder = Folder.create(:title => "test collection",
+    @folder = Collection.create(:title => "test collection",
                            :creator => @user.login,
                            :part => @file.pid)
   end
@@ -20,7 +20,7 @@ describe Folder do
     @folder.rightsMetadata.should be_instance_of Hydra::RightsMetadata
   end
   it "should have dc desc metadata" do
-    @folder.descMetadata.should be_kind_of FolderRDFDatastream
+    @folder.descMetadata.should be_kind_of GammaRDFDatastream
   end
   it "should belong to testuser" do
     @folder.creator.should == [@user.email]

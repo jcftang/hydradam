@@ -1,10 +1,10 @@
-require "psu"
+require "psu-customizations"
 
-class Folder < ActiveFedora::Base
+class Collection < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMethods
 
-  has_metadata :name => "descMetadata", :type => ActiveFedora::DCRDFDatastream
+  has_metadata :name => "descMetadata", :type => GammaRDFDatastream
 
   belongs_to :user, :property => "creator"
   has_many :generic_files, :property => "hasPart"
