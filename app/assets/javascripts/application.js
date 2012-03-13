@@ -19,6 +19,7 @@
 // Required by Blacklight
 //= require jquery-ui
 //= require blacklight/blacklight
+//= require 'twitter_bootstrap/bootstrap-tooltip.js'
 //= require_tree .
 //
 $(function() {
