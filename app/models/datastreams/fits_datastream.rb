@@ -7,8 +7,8 @@ class FitsDatastream < ActiveFedora::NokogiriDatastream
            :schema => "http://hul.harvard.edu/ois/xml/xsd/fits/fits_output.xsd")
     t.identification {
       t.identity {
-        t.format_label(:path=>{:attribute=>"format"})
-        t.mime_type(:path=>{:attribute=>"mimetype"})
+        t.format_label(:path=>{:attribute=>"format"}, :index_as=>[:facetable])
+        t.mime_type(:path=>{:attribute=>"mimetype"}, :index_as=>[:facetable])
       }
     }
     t.fileinfo {
@@ -18,8 +18,8 @@ class FitsDatastream < ActiveFedora::NokogiriDatastream
       t.original_checksum(:path=>"md5checksum")
     }
     t.filestatus { 
-      t.well_formed(:path=>"well-formed")
-      t.valid(:path=>"valid")
+      t.well_formed(:path=>"well-formed", :index_as=>[:facetable])
+      t.valid(:path=>"valid", :index_as=>[:facetable])
     }
     t.metadata {
       t.document {

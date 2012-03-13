@@ -54,7 +54,7 @@ def enforce_solr_permissions(opts={})
     # sniffing requires solr requests to be made with "echoParams=all", for
     # app code to actually have it echo'd back to see it.  
     config.add_facet_field 'active_fedora_model_s', :label => "Object Type"
-    config.add_facet_field 'mime_type_s', :label => "MIME Type"
+    config.add_facet_field 'mime_type_facet', :label => "MIME Type"
     config.add_facet_field 'subject_topic_facet', :label => "Topic", :limit => 20
     config.add_facet_field 'language_facet', :label => "Language", :limit => true
     config.add_facet_field 'lc_1letter_facet', :label => "Call Number"
