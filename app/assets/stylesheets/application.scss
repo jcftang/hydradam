@@ -13,16 +13,20 @@
  *= require_tree .
 */
 
+// temporary fix for compass_twitter_bootstrap
+@function e($raw-css) {
+    @return #{$raw-css}
+}
+
+
 @import "compass_twitter_bootstrap";
 @import "compass_twitter_bootstrap/layouts";
 
 #page {
-  @extend .container;
   padding-top: 90px;
 }
 
 #bd {
-  @extend .container;
 }
 
 #hd {
@@ -40,11 +44,56 @@
 
 
 #sidebar {
-  @extend .span2; 
+  @extend .span3; 
+  @include gridSystem-gridColumn($gridGutterWidth);
 }
 
 #main {
-  @extend .span10;
+  @extend .span9;
+  @include gridSystem-gridColumn($gridGutterWidth);
+  margin-left: 0;
+}
+
+#main_container {
+}
+#sortAndPerPage {
+  @extend .row;
+  .per_page {
+    @extend .span4;
+  @include gridSystem-gridColumn($gridGutterWidth);
+  }
+
+  #sort_form {
+  @include gridSystem-gridColumn($gridGutterWidth);
+    @extend .span4;
+  }
+
+  label, select {
+     display: inline;
+     width: auto;
+  }
+}
+
+.document, #document {
+  @extend .row;
+  margin-left: 0;
+
+  .documentHeader {
+    @extend .row;
+    margin-left: 0;
+  }
+
+  .documentFunctions form{
+    @include gridSystem-gridColumn($gridGutterWidth);
+    @extend .span1;
+    width: 80px;
+    margin-left: 0;
+    float: right;
+
+    input, label {
+      display: inline;
+    }
+  }
 }
 
 .new_user {
