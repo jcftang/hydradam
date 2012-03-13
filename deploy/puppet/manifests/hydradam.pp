@@ -3,6 +3,9 @@ class hydradam {
   include hydrajetty
   include servicemix
 
+  package { 'file':
+    ensure => present
+  }
   group { 'hydra':
     ensure => present;
     'jetty':
