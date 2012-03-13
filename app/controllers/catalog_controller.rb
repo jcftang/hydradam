@@ -9,7 +9,7 @@ class CatalogController < ApplicationController
 
   # These before_filters apply the hydra access controls
   before_filter :enforce_access_controls
-  before_filter :enforce_viewing_context_for_show_requests, :only=>:show
+#  before_filter :enforce_viewing_context_for_show_requests, :only=>:show
   # This applies appropriate access controls to all solr queries
   CatalogController.solr_search_params_logic << :add_access_controls_to_solr_params
   # This filters out objects that you want to exclude from search results, like FileAssets
@@ -47,8 +47,8 @@ class CatalogController < ApplicationController
     # on the solr side in the request handler itself. Request handler defaults
     # sniffing requires solr requests to be made with "echoParams=all", for
     # app code to actually have it echo'd back to see it.  
-    config.add_facet_field 'object_type_facet', :label => "Format"
-    config.add_facet_field 'pub_date', :label => "Publication Year"
+    config.add_facet_field 'active_fedora_model_s', :label => "Object Type"
+    config.add_facet_field 'mime_type_s', :label => "MIME Type"
     config.add_facet_field 'subject_topic_facet', :label => "Topic", :limit => 20
     config.add_facet_field 'language_facet', :label => "Language", :limit => true
     config.add_facet_field 'lc_1letter_facet', :label => "Call Number"
@@ -73,19 +73,11 @@ class CatalogController < ApplicationController
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display 
     config.add_show_field 'title_display', :label => 'Title:' 
-    config.add_show_field 'title_vern_display', :label => 'Title:' 
-    config.add_show_field 'subtitle_display', :label => 'Subtitle:' 
-    config.add_show_field 'subtitle_vern_display', :label => 'Subtitle:' 
-    config.add_show_field 'author_display', :label => 'Author:' 
-    config.add_show_field 'author_vern_display', :label => 'Author:' 
-    config.add_show_field 'format', :label => 'Format:' 
-    config.add_show_field 'url_fulltext_display', :label => 'URL:'
-    config.add_show_field 'url_suppl_display', :label => 'More Information:'
-    config.add_show_field 'language_facet', :label => 'Language:'
-    config.add_show_field 'published_display', :label => 'Published:'
-    config.add_show_field 'published_vern_display', :label => 'Published:'
-    config.add_show_field 'lc_callnum_display', :label => 'Call number:'
-    config.add_show_field 'isbn_t', :label => 'ISBN:'
+    config.add_show_field 'active_fedora_model_s', :label => 'Object Type:' 
+    config.add_show_field 'format_label_t', :label => 'Format:'
+    config.add_show_field 'mime_type_t', :label => 'MIME Type:'
+    config.add_show_field 'system_create_dt', :label => 'Created:'
+    
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
