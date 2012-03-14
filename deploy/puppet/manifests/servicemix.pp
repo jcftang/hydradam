@@ -146,7 +146,7 @@ featuresRepositories=mvn:org.apache.karaf.assemblies.features/standard/2.2.2-fus
 #
 # Comma separated list of features to install at startup
 #
-featuresBoot=karaf-framework,config,xml-specs,activemq-broker,activemq-spring,camel,camel-activemq,camel-nmr,saaj,camel-cxf,camel-blueprint,jbi-cluster,war,servicemix-cxf-bc,servicemix-file,servicemix-ftp,servicemix-http,servicemix-jms,servicemix-mail,servicemix-smpp,servicemix-snmp,servicemix-vfs,servicemix-bean,servicemix-camel,servicemix-cxf-se,servicemix-drools,servicemix-eip,servicemix-osworkflow,servicemix-quartz,servicemix-scripting,servicemix-validation,servicemix-saxon,servicemix-wsn2005,camel-http",
+featuresBoot=karaf-framework,config,xml-specs,activemq-broker,activemq-spring,camel,camel-activemq,camel-nmr,saaj,camel-cxf,camel-blueprint,jbi-cluster,war,servicemix-cxf-bc,servicemix-file,servicemix-ftp,servicemix-http,servicemix-jms,servicemix-mail,servicemix-smpp,servicemix-snmp,servicemix-vfs,servicemix-bean,servicemix-camel,servicemix-cxf-se,servicemix-drools,servicemix-eip,servicemix-osworkflow,servicemix-quartz,servicemix-scripting,servicemix-validation,servicemix-saxon,servicemix-wsn2005,camel-http,camel-script,camel-soap,camel-velocity,camel-mail,camel-exec",
     require => [File["/var/www/hydradam/servicemix"]]
   }
 
