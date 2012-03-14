@@ -3,6 +3,10 @@ class hydradam {
   include hydrajetty
   include servicemix
 
+  package { 'perl-XML-Twig': ensure => present }
+  package { 'perl-Image-ExifTool': ensure => present }
+
+
   package { 'file':
     ensure => present
   }
