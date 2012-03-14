@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint
+    xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+      http://www.osgi.org/xmlns/blueprint/v1.0.0
+      http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+    <camelContext xmlns="http://camel.apache.org/schema/blueprint" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:access="http://www.fedora.info/definitions/1/0/access/">
+
+      <route>
+        <from uri="activemq:topic:fedora.datastream.content.changed"/>
+
+        <setHeader headerName="CamelHttpUri">
+          <simple>${body}/content</simple>
+        </setHeader>
+
+        <setHeader headerName="CamelHttpMethod">
+          <constant>GET</constant>
+        </setHeader>
+
+        <to uri="http://local.fedora.server?authMethod=Basic&amp;authUsername=fedoraAdmin&amp;authPassword=fedoraAdmin" />
+        <to uri="file:tmp/datastream-cache" />
+
+        <setHeader headerName="CamelExecCommandArgs">
+          <simple>-X ${header.CamelFileNameProduced}</simple>
+        </setHeader>
+        <transform>
+          <simple></simple>
+        </transform>
+        <to uri="exec:exiftool" />
+
+
+        <!-- presumably this could be scripted within camel?? -->
+        <setHeader headerName="CamelExecCommandArgs">
+          <simple>-pe "s#${header.CamelFileNameProduced}#info:fedora/${header.pid}/${header.dsid}#g"</simple>
+        </setHeader>
+        <to uri="exec:perl" />
+        <convertBodyTo type="java.lang.String" />
+
+        <removeHeaders pattern="CamelHttp*" />
+        <setHeader headerName="dsid">
+          <constant>Exiftool</constant>
+        </setHeader>
+        <setHeader headerName="mimeType">
+          <constant>text/xml</constant>
+        </setHeader>
+        <to uri="activemq:fedora.datastream.create" />
+      </route>
+    </camelContext>
+  </blueprint>

@@ -14,6 +14,9 @@
           <xpath resultType="java.lang.String">//atom:category[@scheme="fedora-types:pid"]/@term</xpath>
         </setHeader>
 
+        <setHeader headerName="repository_url">
+          <xpath resultType="java.lang.String">//atom:author/atom:uri</xpath>
+        </setHeader>
 
         <multicast>
           <pipeline>
