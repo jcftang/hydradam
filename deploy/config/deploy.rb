@@ -75,6 +75,7 @@ namespace :deploy do
     system "cap deploy:db:migrate"
     system "cap deploy:jetty:config"
     system "cap deploy:camel:routes"
+    system "cap deploy:fedora:fixtures"
     system "cap deploy:passenger:restart"
   end
 
@@ -101,6 +102,13 @@ namespace :deploy do
     end
 
   end
+
+ namespace :fedora do
+   task :fixtures do
+      run "cd #{current_path}; rake fedora:load pid=indexable:sdef"
+      run "cd #{current_path}; rake fedora:load pid=indexable:generic_file_impl"
+   end
+ end
 
   
   desc "Sets permissions for Rails Application"
