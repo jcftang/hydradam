@@ -87,7 +87,9 @@ class GenericFilesController < ApplicationController
         generic_file.contributor = params[:generic_file][:contributor] if params[:generic_file].has_key?(:contributor)
         generic_file.publisher = params[:generic_file][:publisher] if params[:generic_file].has_key?(:publisher)
         generic_file.save
-        @generic_files << generic_file
+        
+        f = GenericFile.find(generic_file.pid); f.owner_id = current_user.email; f.save
+        @generic_files << f 
       end
     end
     @generic_files
