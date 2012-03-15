@@ -45,7 +45,7 @@ gem "devise"
 gem "blacklight", :git   => "git://github.com/projectblacklight/blacklight.git"
 gem "hydra-head", :git   => "git://github.com/projecthydra/hydra-head.git", :branch => '4.0.x'
 gem 'active-fedora', :git=>'git://github.com/mediashelf/active_fedora.git'
-gem 'blacklight_advanced_search', :path => '/Volumes/Scratch/blacklight_advanced_search'
+gem 'blacklight_advanced_search' 
 gem "mediainfo"
 gem "noid"
 
