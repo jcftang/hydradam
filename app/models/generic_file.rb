@@ -40,14 +40,6 @@ class GenericFile < ActiveFedora::Base
   delegate :file_author, :to => :characterization
   delegate :page_count, :to => :characterization
 
-  before_save :characterize
-
-  ## Extract the metadata from the content datastream and record it in the characterization datastream
-  def characterize
-    if content.changed?
-      characterization.content = content.extract_metadata
-    end
-  end
   
   def to_solr(solr_doc={})
     super(solr_doc)
