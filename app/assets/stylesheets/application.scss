@@ -50,7 +50,7 @@
   @extend .navbar-search;
   @extend .pull-left;
 
-  h2, label, select, input[type="submit"], hr { display: none; }
+  h2, .advanced_search, label, select, input[type="submit"], hr { display: none; }
 
   .q { @extend .search-query; width: 130px; }
 }
