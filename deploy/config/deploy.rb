@@ -12,6 +12,26 @@ set :branch, "master"
 set :deploy_via, :remote_cache
 set :git_enable_submodules, 1
 set :group_writable, true
+set   :use_sudo,            false
+
+directory_configuration = %w(db config system)
+symlink_configuration = [
+  %w(config/database.yml    config/database.yml),
+  %w(config/fedora.yml    config/fedora.yml),
+  %w(config/solr.yml    config/solr.yml),
+  %w(db/production.sqlite3  db/production.sqlite3),
+  %w(system                 public/system)
+]
+
+# Application Specific Tasks
+#   that should be performed at the end of each deployment
+def application_specific_tasks
+  # system 'cap deploy:whenever:update_crontab'
+  # system 'cap deploy:delayed_job:stop'
+  # system 'cap deploy:delayed_job:start n=1'
+  # system 'cap deploy:run_command command="ls -la"'
+end
+
 
 $:.unshift(File.expand_path('./lib', ENV['rvm_path']))
 require "rvm/capistrano"  
@@ -34,13 +54,149 @@ server domain, :app, :web, :db, :fedora
 
 #If you are using Passenger mod_rails uncomment this:
 namespace :deploy do
+  desc "Initializes a bunch of tasks in order after the last deployment process."
+  task :restart do
+    puts "\n\n=== Running Custom Processes! ===\n\n"
+    create_production_log
+    setup_symlinks
+    application_specific_tasks    
+    set_permissions
+    system 'cap deploy:passenger:restart'
+  end
+
+
+  desc "Executes the initial procedures for deploying a Ruby on Rails Application."
+  task :initial do
+    system "cap deploy:setup"
+    system "cap deploy"
+    system "cap deploy:gems:install"
+    system "cap deploy:db:create"
+    system "cap deploy:db:migrate"
+    system "cap deploy:passenger:restart"
+  end
+
+  desc "Creates symbolic links from shared folder"
+  task :setup_symlinks do
+    puts "\n\n=== Setting up Symbolic Links! ===\n\n"
+    symlink_configuration.each do |config|
+      run "ln -nfs #{File.join(shared_path, config[0])} #{File.join(release_path, config[1])}"
+    end
+  end
+  
+
+ namespace :passenger do
+
+    desc "Restarts Passenger"
+    task :restart do
+      puts "\n\n=== Restarting Passenger! ===\n\n"
+      run "touch #{current_path}/tmp/restart.txt"
+    end
+
+  end
+
+  
+  desc "Sets permissions for Rails Application"
+  task :set_permissions do
+    puts "\n\n=== Setting Permissions! ===\n\n"
+    run "chown -R vagrant:hydra #{deploy_to}"
+  end
+  
+  desc "Creates the production log if it does not exist"
+  task :create_production_log do
+    unless File.exist?(File.join(shared_path, 'log', 'production.log'))
+      puts "\n\n=== Creating Production Log! ===\n\n"
+      run "touch #{File.join(shared_path, 'log', 'production.log')}"
+    end
+  end
+
+  namespace :config do
+    desc "Syncs the database.yml file from the local machine to the remote machine"
+    task :sync_yaml do
+      puts "\n\n=== Syncing database yaml to the production server! ===\n\n"
+      unless File.exist?("../config/database.yml")
+        puts "There is no ../config/database.yml.\n "
+        exit
+      end
+      system "rsync -vr --exclude='.DS_Store' ../config/database.yml #{user}@#{application}:#{shared_path}/config/"
+      puts "\n\n=== Syncing solr yaml to the production server! ===\n\n"
+      unless File.exist?("../config/solr.yml")
+        puts "There is no ../config/solr.yml.\n "
+        exit
+      end
+      system "rsync -vr --exclude='.DS_Store' ../config/solr.yml #{user}@#{application}:#{shared_path}/config/"
+      puts "\n\n=== Syncing fedora yaml to the production server! ===\n\n"
+      unless File.exist?("../config/fedora.yml")
+        puts "There is no ../config/fedora.yml.\n "
+        exit
+      end
+      system "rsync -vr --exclude='.DS_Store' ../config/fedora.yml #{user}@#{application}:#{shared_path}/config/"
+    end
+  end
+
+  namespace :db do
+  
+    desc "Create Production Database"
+    task :create do
+      puts "\n\n=== Creating the Production Database! ===\n\n"
+      run "cd #{current_path}; rake db:create RAILS_ENV=production"
+      system "cap deploy:set_permissions"
+    end
+  
+    desc "Migrate Production Database"
+    task :migrate do
+      puts "\n\n=== Migrating the Production Database! ===\n\n"
+      run "cd #{current_path}; rake db:migrate RAILS_ENV=production"
+      system "cap deploy:set_permissions"
+    end
+
+    desc "Resets the Production Database"
+    task :migrate_reset do
+      puts "\n\n=== Resetting the Production Database! ===\n\n"
+      run "cd #{current_path}; rake db:migrate:reset RAILS_ENV=production"
+    end
+    
+    desc "Destroys Production Database"
+    task :drop do
+      puts "\n\n=== Destroying the Production Database! ===\n\n"
+      run "cd #{current_path}; rake db:drop RAILS_ENV=production"
+      system "cap deploy:set_permissions"
+    end
+
+    desc "Moves the SQLite3 Production Database to the shared path"
+    task :move_to_shared do
+      puts "\n\n=== Moving the SQLite3 Production Database to the shared path! ===\n\n"
+      run "mv #{current_path}/db/production.sqlite3 #{shared_path}/db/production.sqlite3"
+      system "cap deploy:setup_symlinks"
+      system "cap deploy:set_permissions"
+    end
+  
+    desc "Populates the Production Database"
+    task :seed do
+      puts "\n\n=== Populating the Production Database! ===\n\n"
+      run "cd #{current_path}; rake db:seed RAILS_ENV=production"
+    end
+  
+  end
+
+
+  # Tasks that run after the (cap deploy:setup)
+  
+  desc "Sets up the shared path"
+  task :setup_shared_path do
+    puts "\n\n=== Setting up the shared path! ===\n\n"
+    directory_configuration.each do |directory|
+      run "mkdir -p #{shared_path}/#{directory}"
+    end
+    system "cap deploy:config:sync_yaml"
+  end
+  
+  
+ 
+  
+  
 desc "Compile asets"
   task :assets do
     run "cd #{release_path}; RAILS_ENV=production bundle exec rake assets:clean assets:precompile"
-  end
-
-  task :chown do
-    sudo "chown -R vagrant:hydra /var/www/hydradam"
   end
 
   namespace :camel do
@@ -88,15 +244,6 @@ EOF
 
 end
 
-namespace :passenger do
-  desc "Restart Application"  
-  task :restart do  
-    sudo "/sbin/service httpd reload"
-    run "touch #{current_path}/tmp/restart.txt"  
-  end
-end
-
-
 namespace :jetty do
   desc "Restart Application"  
   task :restart do  
@@ -126,12 +273,14 @@ task :create_gemset do
 end
 
 before "deploy:setup", "create_gemset"
+
 before :deploy, "deploy:setup"
 
 before "deploy:jetty:config", "deploy:jetty:symlink"
 after "deploy:jetty:config", "jetty:restart"
 
-after :deploy,  "deploy:assets", "deploy:camel:routes", "deploy:chown", "deploy:jetty:config", "passenger:restart"
+after :deploy,  "deploy:assets", "deploy:camel:routes", "deploy:set_permissions", "deploy:jetty:config", "passenger:restart"
+after 'deploy:setup', 'deploy:setup_shared_path'
 after "deploy:migrate", "passenger:restart"
 
 
