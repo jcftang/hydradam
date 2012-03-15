@@ -22,5 +22,24 @@
         </setHeader>
         <to uri="http://local.fedora.server?authMethod=Basic&amp;authUsername=fedoraAdmin&amp;authPassword=fedoraAdmin" />
       </route>
+
+      <route>
+        <from uri="vm:fedora.datastream_content" />
+
+        <setHeader headerName="CamelHttpUri">
+          <simple>${header.repository_url}/objects/${header.pid}/datastreams/${header.dsid}/content</simple>
+        </setHeader>
+
+
+        <setHeader headerName="CamelHttpMethod">
+          <constant>GET</constant>
+        </setHeader>
+        <to uri="http://local.fedora.server?authMethod=Basic&amp;authUsername=fedoraAdmin&amp;authPassword=fedoraAdmin" />
+      </route>
+
+      <route>
+        <from uri="vm:fedora.add_datastream" />
+        <to uri="activemq:fedora.datastream.create" />
+      </route>
     </camelContext>
   </blueprint>

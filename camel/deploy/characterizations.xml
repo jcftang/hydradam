@@ -11,15 +11,8 @@
       <route>
         <from uri="activemq:topic:fedora.datastream.content.changed"/>
 
-        <setHeader headerName="CamelHttpUri">
-          <simple>${body}/content</simple>
-        </setHeader>
 
-        <setHeader headerName="CamelHttpMethod">
-          <constant>GET</constant>
-        </setHeader>
-
-        <to uri="http://local.fedora.server?authMethod=Basic&amp;authUsername=fedoraAdmin&amp;authPassword=fedoraAdmin" />
+        <inOut uri="vm:fedora.datastream_content" />
         <to uri="file:tmp/datastream-cache" />
 
         <setHeader headerName="CamelExecCommandArgs">
@@ -29,7 +22,6 @@
           <simple></simple>
         </transform>
         <to uri="exec:exiftool" />
-
 
         <!-- presumably this could be scripted within camel?? -->
         <setHeader headerName="CamelExecCommandArgs">
@@ -45,7 +37,8 @@
         <setHeader headerName="mimeType">
           <constant>text/xml</constant>
         </setHeader>
-        <to uri="activemq:fedora.datastream.create" />
+        <to uri="vm:fedora.add_datastream" />
       </route>
+
     </camelContext>
   </blueprint>
