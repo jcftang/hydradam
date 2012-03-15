@@ -13,7 +13,7 @@
         <from uri="direct:fedora_index_object" />
 
       <setHeader headerName="CamelHttpUri">
-        <simple>${headers.repositoryURL}/objects/${headers.pid}/methods/indexable:sdef/getIndexingMetadata</simple>
+        <simple>${headers.repository_url}/objects/${headers.pid}/methods/indexable:sdef/getIndexingMetadata</simple>
       </setHeader>
       <setHeader headerName="CamelHttpMethod">
         <constant>GET</constant>
@@ -45,13 +45,35 @@
         </setHeader>
 
         <setHeader headerName="CamelHttpUri">
-          <simple>http://localhost:8983/solr/development/update</simple>
+          <simple>http://localhost:8983/solr/development/update?commitWithin=1000</simple>
         </setHeader>
         <to uri="http:my.solr.index" />
+        <to uri="direct:solr_commit_agg" />
       </route>
 
+      <!-- queue changed objects for indexing -->
+      <route>
+        <from uri="direct:solr_commit_agg" />
+        <aggregate strategyRef="aggregatorStrategy" completionSize="20" completionTimeout="1000">
+          <correlationExpression>
+            <constant>1</constant>
+          </correlationExpression>
 
-<bean id="aggregatorStrategy" class="org.apache.camel.processor.aggregate.UseLatestAggregationStrategy"/>
-      
+          <to uri="direct:solr_commit" />
+        </aggregate>
+      </route>
+
+      <route>
+        <from uri="direct:solr_commit" />
+        <setHeader headerName="CamelHttpMethod">
+          <constant>POST</constant>
+        </setHeader>
+
+
+        <transform><constant><![CDATA[<commit />]]></constant></transform>
+        <to uri="http://localhost:8983/solr/development/update" />
+      </route>
+
      </camelContext>
-  </blueprint>
+  <bean id="aggregatorStrategy" class="org.apache.camel.processor.aggregate.UseLatestAggregationStrategy"/>
+</blueprint>
