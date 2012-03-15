@@ -8,7 +8,8 @@ class CatalogController < ApplicationController
   include Hydra::Catalog
 
 def enforce_solr_permissions(opts={})
-    enforce_edit_permissions(opts)
+  # TODO : re-enable solr permissions enforcement..
+   # enforce_edit_permissions(opts)
   end
   before_filter :load_fedora_document, :only=>[:show,:edit,:solr]
   
