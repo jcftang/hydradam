@@ -105,8 +105,8 @@ namespace :deploy do
 
  namespace :fedora do
    task :fixtures do
-      run "cd #{current_path}; rake fedora:load pid=indexable:sdef"
-      run "cd #{current_path}; rake fedora:load pid=indexable:generic_file_impl"
+      run "cd #{current_path};RAILS_ENV=production bundle exec rake fedora:load pid=indexable:sdef"
+      run "cd #{current_path};RAILS_ENV=production bundle exec rake fedora:load pid=indexable:generic_file_impl"
    end
  end
 
@@ -254,6 +254,8 @@ wait
 
 EOF
     sudo "/sbin/service jetty start"
+
+    sleep 30
   end
   end
   
@@ -264,6 +266,7 @@ namespace :jetty do
   desc "Restart Application"  
   task :restart do  
     sudo "/sbin/service jetty restart"
+    sleep 30
   end
 end
 namespace :rvm do
