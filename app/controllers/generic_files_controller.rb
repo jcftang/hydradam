@@ -30,7 +30,7 @@ class GenericFilesController < ApplicationController
       @generic_files.each do |gf|
         notice << render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => gf })
       end
-      flash[:notice] = notice.join("<br/>".html_safe) unless notice.blank?
+      flash[:notice] = notice.join("<br/>").html_safe unless notice.blank?
       redirect_params = {:controller => "catalog", :action => "index"} 
     end
     redirect_to redirect_params 
