@@ -55,11 +55,8 @@ def enforce_solr_permissions(opts={})
     # app code to actually have it echo'd back to see it.  
     config.add_facet_field 'active_fedora_model_s', :label => "Object Type"
     config.add_facet_field 'mime_type_facet', :label => "MIME Type"
-    config.add_facet_field 'subject_topic_facet', :label => "Topic", :limit => 20
-    config.add_facet_field 'language_facet', :label => "Language", :limit => true
-    config.add_facet_field 'lc_1letter_facet', :label => "Call Number"
-    config.add_facet_field 'subject_geo_facet', :label => "Era"
-    config.add_facet_field 'subject_era_facet', :label => "Region"
+    config.add_facet_field 'format_label_facet', :label => 'Format'
+    config.add_facet_field 'objProfile_objOwnerId_s', :label => 'Owner'
 
 
     # Have BL send all facet field names to Solr, which has been the default
@@ -74,6 +71,8 @@ def enforce_solr_permissions(opts={})
     config.add_index_field 'format_label_t', :label => 'Format:'
     config.add_index_field 'mime_type_t', :label => 'MIME Type:'
     config.add_index_field 'system_create_dt', :label => 'Created:'
+    config.add_index_field 'label_t', :label => 'Label:'
+    config.add_index_field 'objProfile_objOwnerId_s', :label => 'Owner:'
 
 
     # solr fields to be displayed in the show (single result) view
