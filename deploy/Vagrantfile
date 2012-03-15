@@ -18,6 +18,8 @@ Vagrant::Config.run do |global_config|
       puppet.module_path = 'puppet/modules'
     end
 
+    config.vm.share_folder "hydradam", "/hydradam", "../"
+
     config.vm.customize [
       "modifyvm", :id,
       "--name", "Hydradam VM",
