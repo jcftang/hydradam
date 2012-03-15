@@ -20,7 +20,8 @@ symlink_configuration = [
   %w(config/fedora.yml    config/fedora.yml),
   %w(config/solr.yml    config/solr.yml),
   %w(db/production.sqlite3  db/production.sqlite3),
-  %w(system                 public/system)
+  %w(system                 public/system),
+  %w(jetty                 jetty)
 ]
 
 # Application Specific Tasks
@@ -69,9 +70,11 @@ namespace :deploy do
   task :initial do
     system "cap deploy:setup"
     system "cap deploy"
-    system "cap deploy:gems:install"
+    system 'cap deploy:apache:restart'
     system "cap deploy:db:create"
     system "cap deploy:db:migrate"
+    system "cap deploy:jetty:config"
+    system "cap deploy:camel:routes"
     system "cap deploy:passenger:restart"
   end
 
@@ -79,10 +82,15 @@ namespace :deploy do
   task :setup_symlinks do
     puts "\n\n=== Setting up Symbolic Links! ===\n\n"
     symlink_configuration.each do |config|
-      run "ln -nfs #{File.join(shared_path, config[0])} #{File.join(release_path, config[1])}"
+      run "ln -nfs #{File.join(shared_path, config[0])} #{File.join(current_path, config[1])}"
     end
   end
   
+  namespace :apache do
+    task :restart do
+      run "sudo service httpd restart"
+    end
+  end
 
  namespace :passenger do
 
@@ -98,7 +106,7 @@ namespace :deploy do
   desc "Sets permissions for Rails Application"
   task :set_permissions do
     puts "\n\n=== Setting Permissions! ===\n\n"
-    run "chown -R vagrant:hydra #{deploy_to}"
+    run "sudo chown -R vagrant:hydra #{deploy_to}"
   end
   
   desc "Creates the production log if it does not exist"
@@ -196,27 +204,27 @@ namespace :deploy do
   
 desc "Compile asets"
   task :assets do
-    run "cd #{release_path}; RAILS_ENV=production bundle exec rake assets:clean assets:precompile"
+    run "cd #{current_path}; RAILS_ENV=production bundle exec rake assets:clean assets:precompile"
   end
 
   namespace :camel do
     desc "deploy camel routes"
     task :routes do
-      run "rsync -avz --delete #{release_path}/camel/deploy/* /var/www/hydradam/servicemix/deploy"
+      run "rsync -avz --delete #{current_path}/camel/deploy/* /var/www/hydradam/servicemix/deploy"
     end
   end
 
   namespace :jetty do
   desc "add ./jetty symlink "
   task :symlink do
-    run "ln -s /var/www/hydradam/hydra-jetty #{release_path}/jetty"
+    run "ln -nfs /var/www/hydradam/hydra-jetty #{shared_path}/jetty"
   end
 
   task :config do
     sudo "/sbin/service jetty stop"
-    run "cd #{release_path}; bundle exec rake hydra:jetty:config"
+    run "cd #{current_path}; bundle exec rake hydra:jetty:config"
     run <<-EOF
-cd #{release_path}/jetty;
+cd #{current_path}/jetty;
 echo 'spawn fedora/default/server/bin/fedora-rebuild.sh
 
 sleep 2
@@ -279,8 +287,7 @@ before :deploy, "deploy:setup"
 before "deploy:jetty:config", "deploy:jetty:symlink"
 after "deploy:jetty:config", "jetty:restart"
 
-after :deploy,  "deploy:assets", "deploy:camel:routes", "deploy:set_permissions", "deploy:jetty:config", "passenger:restart"
+after :deploy,  "deploy:assets", "deploy:set_permissions"
 after 'deploy:setup', 'deploy:setup_shared_path'
-after "deploy:migrate", "passenger:restart"
 
 
