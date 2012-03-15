@@ -40,5 +40,36 @@
         <to uri="vm:fedora.add_datastream" />
       </route>
 
+      <route>
+        <from uri="activemq:topic:fedora.datastream.content.changed"/>
+
+
+        <inOut uri="vm:fedora.datastream_content" />
+        <to uri="file:tmp/datastream-cache" />
+
+        <setHeader headerName="CamelExecCommandArgs">
+          <simple>-i ${header.CamelFileNameProduced}</simple>
+        </setHeader>
+        <transform>
+          <simple></simple>
+        </transform>
+        <to uri="exec:/var/www/hydradam/current/vendor/fits/fits.sh" />
+
+        <!-- presumably this could be scripted within camel?? -->
+        <setHeader headerName="CamelExecCommandArgs">
+          <simple>-pe "s#${header.CamelFileNameProduced}#info:fedora/${header.pid}/${header.dsid}#g"</simple>
+        </setHeader>
+        <to uri="exec:perl" />
+        <convertBodyTo type="java.lang.String" />
+
+        <removeHeaders pattern="CamelHttp*" />
+        <setHeader headerName="dsid">
+          <constant>characterization</constant>
+        </setHeader>
+        <setHeader headerName="mimeType">
+          <constant>text/xml</constant>
+        </setHeader>
+        <to uri="vm:fedora.add_datastream" />
+      </route>
     </camelContext>
   </blueprint>
