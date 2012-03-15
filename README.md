@@ -46,7 +46,7 @@ $ vagrant ssh-config >> ~/.ssh/config
 1. Deploy the Rails application
 
 ```bash
-$ cap deploy && cap deploy:migrate
+$ cap deploy:initial
 ```
 
 1. ???
