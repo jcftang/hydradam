@@ -55,6 +55,12 @@ server domain, :app, :web, :db, :fedora
 
 #If you are using Passenger mod_rails uncomment this:
 namespace :deploy do
+  desc "Initialize a Vagrant VM and deploy the application" 
+  task :vm do
+    system "vagrant up"
+    system "cap deploy:initial"
+  end
+
   desc "Initializes a bunch of tasks in order after the last deployment process."
   task :restart do
     puts "\n\n=== Running Custom Processes! ===\n\n"
@@ -105,6 +111,9 @@ namespace :deploy do
 
  namespace :fedora do
    task :fixtures do
+     puts "\n\n=== Loading Fedora Objects ===\n\n"
+      run "curl 'http://localhost:8983/fedora/describe'"
+
       run "cd #{current_path};RAILS_ENV=production bundle exec rake fedora:load pid=indexable:sdef"
       run "cd #{current_path};RAILS_ENV=production bundle exec rake fedora:load pid=indexable:generic_file_impl"
    end
