@@ -15,10 +15,10 @@ class FileContentDatastream < ActiveFedora::Datastream
 
     f.binmode
     if content.respond_to? :read
-      f.puts content.read
+      f.write content.read
       content.rewind
     else
-      f.puts content
+      f.write content
     end
     f.close
     command = "#{fits_path} -i #{f.path}"
