@@ -12,9 +12,10 @@ module ApplicationHelper
 
   def render_media_partial doc, locals = {}
     format = document_partial_name(doc)
-    mime = doc.get(:mime_type_t).to_s.parameterize("_")
+    mime = (doc.get(:mime_type_t) || "default").parameterize("_")
 
     partial_paths = ["%2$s/_media_partials/%1$s", "%2$s/_media_partials/default"]
+
 
     partial_paths.each do |str|
       begin
