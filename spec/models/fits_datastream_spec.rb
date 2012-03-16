@@ -4,6 +4,7 @@ describe FitsDatastream do
   before do
     @file = GenericFile.new
     @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+    @file.characterize
     @file.save
   end
   it "should have a format label" do

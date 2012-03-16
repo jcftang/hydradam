@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe User do
   before do
-    @user = User.create(:login => "testuser", 
+    @user = User.create(
                         :email => "testuser@example.com", 
                         :password => "password", 
                         :password_confirmation => "password")
@@ -10,8 +10,7 @@ describe User do
   after do
     @user.delete
   end
-  it "should have a login and email" do
-    @user.login.should == "testuser@example.com"
+  it "should have an email" do
     @user.email.should == "testuser@example.com"
   end
   it "should have zero batches by default" do

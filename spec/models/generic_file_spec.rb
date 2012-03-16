@@ -104,11 +104,12 @@ describe GenericFile do
     @file.to_solr["based_near_t"].should == ["Medina, Saudi Arabia"]
   end
   describe "characterize" do
-    it "should run when the content datastream is created" do
-      @file.expects(:characterize)
-      @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
-      @file.save
-    end
+    # from psu gamma, happens out-of-band for us..
+    #it "should run when the content datastream is created" do
+    #  @file.expects(:characterize)
+    #  @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+    #  @file.save
+    #end
     it "should return expected results when called" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.characterize
@@ -117,6 +118,7 @@ describe GenericFile do
     end
     it "should return expected results after a save" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @file.characterize
       @file.save
       @file.file_size.should == ['4218']
       @file.original_checksum.should == ['28da6259ae5707c68708192a40b3e85c']

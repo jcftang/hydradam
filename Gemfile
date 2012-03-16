@@ -47,7 +47,8 @@ gem "hydra-head", :git   => "git://github.com/projecthydra/hydra-head.git", :bra
 gem 'active-fedora', :git=>'git://github.com/mediashelf/active_fedora.git'
 gem 'blacklight_advanced_search' 
 gem "mediainfo"
-gem "noid"
+gem "noid", ">= 0.5.4"
+gem 'delayed_job_active_record'
 
 group :development, :test do 
   gem 'solrizer-fedora', '>=1.0.1'
@@ -59,6 +60,9 @@ group :development, :test do
   gem 'capybara'
   gem 'bcrypt-ruby'
   gem "jettywrapper"
+  gem "factory_girl_rails"
+  gem 'selenium-webdriver'
+  gem 'headless'
   gem "capistrano"
   gem "vagrant"
 end

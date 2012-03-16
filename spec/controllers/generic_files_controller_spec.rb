@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe GenericFilesController do
   before do
-    sign_in FactoryGirl.create(:user)
+    sign_in FactoryGirl.create(:user, :email => 'testuser@example.org')
   end
   describe "#upload" do
     before do
