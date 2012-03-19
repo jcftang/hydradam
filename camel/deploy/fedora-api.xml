@@ -24,7 +24,7 @@
       </route>
 
       <route>
-        <from uri="vm:fedora.datastream_content" />
+        <from uri="vm:fedora.datastream_content?concurrentConsumers=5" />
 
         <setHeader headerName="CamelHttpUri">
           <simple>${header.repository_url}/objects/${header.pid}/datastreams/${header.dsid}/content</simple>
