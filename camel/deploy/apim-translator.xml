@@ -11,7 +11,7 @@
       <route>
         <from uri="activemq:topic:fedora.apim.update"/>
         <setHeader headerName="pid">
-          <xpath resultType="java.lang.String">//atom:category[@scheme="fedora-types:pid"]/@term</xpath>
+          <xpath resultType="java.lang.String">//atom:category[@scheme="fedora-types:pid"]/@term|//atom:summary</xpath>
         </setHeader>
 
         <setHeader headerName="repository_url">
