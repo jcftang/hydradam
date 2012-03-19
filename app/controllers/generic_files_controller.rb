@@ -14,6 +14,7 @@ class GenericFilesController < ApplicationController
 
   def edit
     @generic_file = GenericFile.find(params[:id])
+    @document_fedora = @generic_file
   end
 
   def create
@@ -47,29 +48,24 @@ class GenericFilesController < ApplicationController
  
   def update
     @generic_file = GenericFile.find(params[:id])
-    @generic_file.update_attributes(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
+    logger.debug("attributes submitted: #{sanitized_params.inspect}")
+    update_document(@generic_file, sanitized_params)
+    @generic_file.update_attributes((params[:generic_file] || {}).reject {|k,v| k=="Filedata" || k=="Filename"})
     flash[:notice] = "Successfully updated." 
     if params.has_key?(:Filedata) 
         add_posted_blob_to_asset(generic_file,params[:Filedata])
     end 
+    @document_fedora = @generic_file
     render :edit 
-  end
-
-  def edit
-    @generic_file = GenericFile.find(params[:id])
-  end
-
-  def show
-    @generic_file = GenericFile.find(params[:id]) 
-  end
-
-  def audit
-    @generic_file = GenericFile.find(params[:id])
-    render :json=>@generic_file.content.audit
   end
 
 
   protected
+  def sanitized_params
+    @sanitized_params ||= begin
+      sanitize_update_params
+                          end
+  end
   # takes form file inputs and assigns meta data individually 
   # to each generic file asset and saves generic file assets # @param [Hash] of form fields
   def create_and_save_generic_files_from_params
@@ -77,7 +73,7 @@ class GenericFilesController < ApplicationController
     if params.has_key?(:Filedata)
       params[:Filedata].each do |file|
         params[:generic_file] = {} unless params.has_key? :generic_file
-        generic_file = GenericFile.new(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
+        generic_file = GenericFile.new((params[:generic_file] || {}).reject {|k,v| k=="Filedata" || k=="Filename"})
         
         add_posted_blob_to_asset(generic_file,file)
         apply_depositor_metadata(generic_file)
