@@ -27,9 +27,9 @@ class rvm::dependencies::centos {
   if ! defined(Package['git'])             { package { 'git':             ensure => installed } }
 
   exec { "rpmforge":
-    command => "curl -L -O http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm && rpm -i rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm", 
+    command => "curl -L -O http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.i686.rpm && rpm -i rpmforge-release-0.5.2-2.el6.rf.i686.rpm", 
     cwd     => "/var/tmp",
-    creates => "/var/tmp/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm",
+    creates => "/var/tmp/rpmforge-release-0.5.2-2.el6.rf.i686.rpm",
     path    => ["/bin", "/usr/bin", "/usr/sbin"],
     before  => Package['libcurl-devel']
   }

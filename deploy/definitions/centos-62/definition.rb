@@ -2,7 +2,7 @@ Veewee::Session.declare({
   :cpu_count => '2', :memory_size=> '2048',
   :disk_size => '10140', :disk_format => 'VDI', :hostiocache => 'off',
   :os_type_id => 'RedHat_64',
-  :iso_file => "CentOS-6.2-x86_64-minimal.iso", :iso_src => "http://mirror.internode.on.net/pub/centos/6.2/isos/x86_64/CentOS-6.2-x86_64-minimal.iso", :iso_md5 => "20dac370a6e08ded2701e4104855bc6e", :iso_download_timeout => 1000,
+  :iso_file => "CentOS-6.2-i386-minimal.iso", :iso_src => "http://mirror.cisp.com/CentOS/6.2/isos/i386/CentOS-6.2-i386-minimal.iso", :iso_md5 => "cc4fbd16bd305f5bf6731b4b10f8fd18", :iso_download_timeout => 1000,
   :boot_wait => "10", :boot_cmd_sequence => [
     '<Tab> text ks=http://%IP%:%PORT%/ks.cfg<Enter>'
   ],
