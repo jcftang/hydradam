@@ -16,3 +16,4 @@
 .vagrant
 deploy/iso
 deploy/*.box
+deploy/definitions/*/postinstall-local.sh
