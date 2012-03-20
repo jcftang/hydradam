@@ -12,7 +12,8 @@
         <from uri="activemq:topic:fedora.datastream.content.changed"/>
 
 
-        <inOut uri="vm:fedora.datastream_content" />
+        <!-- 1 hour timeout.. -->
+        <inOut uri="vm:fedora.datastream_content?timeout=3600000" />
         <to uri="file:tmp/datastream-cache" />
 
         <setHeader headerName="CamelExecCommandArgs">
@@ -44,7 +45,8 @@
         <from uri="activemq:topic:fedora.datastream.content.changed"/>
 
 
-        <inOut uri="vm:fedora.datastream_content" />
+        <!-- 1 hour timeout.. -->
+        <inOut uri="vm:fedora.datastream_content?timeout=3600000" />
         <to uri="file:tmp/datastream-cache" />
 
         <setHeader headerName="CamelExecCommandArgs">
