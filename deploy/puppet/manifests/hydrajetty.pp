@@ -33,6 +33,7 @@ class hydrajetty {
   extract_file { "/tmp/mysql-connector-java.tar.gz":
     destdir => "/tmp/",
     creates => "mysql-connector-java-5.1.18",
+    user    => 'vagrant',
     to      => '/tmp/mysql-connector-java',
     require => [File["/tmp/mysql-connector-java.tar.gz"]]
   }
