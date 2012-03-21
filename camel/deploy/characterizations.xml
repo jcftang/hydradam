@@ -14,7 +14,7 @@
 
         <!-- 1 hour timeout.. -->
         <inOut uri="vm:fedora.datastream_content?timeout=3600000" />
-        <to uri="file:tmp/datastream-cache" />
+        <to uri="file:tmp/datastream-cache?delete=true" />
 
         <setHeader headerName="CamelExecCommandArgs">
           <simple>-X ${header.CamelFileNameProduced}</simple>
@@ -39,6 +39,11 @@
           <constant>text/xml</constant>
         </setHeader>
         <to uri="vm:fedora.add_datastream" />
+        <setHeader headerName="CamelExecCommandArgs">
+          <simple>${header.CamelFileNameProduced}</simple>
+        </setHeader>
+        <to uri="exec:rm" />
+        
       </route>
 
       <route>
@@ -47,7 +52,7 @@
 
         <!-- 1 hour timeout.. -->
         <inOut uri="vm:fedora.datastream_content?timeout=3600000" />
-        <to uri="file:tmp/datastream-cache" />
+        <to uri="file:tmp/datastream-cache?delete=true" />
 
         <setHeader headerName="CamelExecCommandArgs">
           <simple>-i ${header.CamelFileNameProduced}</simple>
@@ -72,6 +77,10 @@
           <constant>text/xml</constant>
         </setHeader>
         <to uri="vm:fedora.add_datastream" />
+        <setHeader headerName="CamelExecCommandArgs">
+          <simple>${header.CamelFileNameProduced}</simple>
+        </setHeader>
+        <to uri="exec:rm" />
       </route>
     </camelContext>
   </blueprint>
