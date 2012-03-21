@@ -10,7 +10,7 @@
 
       <route>
         <from uri="vm:fedora.create_object" />
-                <transform><simple /></transform>
+        <transform><simple /></transform>
 
         <setHeader headerName="CamelHttpMethod">
           <constant>POST</constant>
@@ -23,7 +23,7 @@
         </setHeader>
 
         <inOut uri="http://local.fedora.server?authMethod=Basic&amp;authUsername=fedoraAdmin&amp;authPassword=fedoraAdmin" />
-
+        <convertBodyTo type="java.lang.String" />
       </route>
 
       <!-- create/update a fedora datastream, put the body content into header.pid as header.dsid  with header.mimeType -->
