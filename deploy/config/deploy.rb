@@ -79,8 +79,8 @@ namespace :deploy do
     system 'cap deploy:apache:restart'
     system "cap deploy:db:create"
     system "cap deploy:db:migrate"
-    system "cap deploy:jetty:config"
     system "cap deploy:fedora:db:create"
+    system "cap deploy:jetty:config"
     system "cap deploy:camel:routes"
     system "cap deploy:fedora:fixtures"
     system "cap deploy:passenger:restart"
@@ -122,7 +122,7 @@ namespace :deploy do
    namespace :db do
      task :create do
        puts "\n\n === Create Fedora Database ===\n\n"
-       run "mysql -u root -e 'CREATE DATABASE fedora3; CREATE USER 'fedoraAdmin'@'localhost' IDENTIFIED BY  'fedoraAdmin'; GRANT ALL on fedora3.* TO 'fedoraAdmin'@'localhost';'"
+       run "mysql -u root -e 'CREATE DATABASE fedora3; CREATE USER \"fedoraAdmin\"@\"localhost\" IDENTIFIED BY  \"fedoraAdmin\"; GRANT ALL on fedora3.* TO \"fedoraAdmin\"@\"localhost\";'"
      end
    end
  end
