@@ -40,6 +40,7 @@ class hydrajetty {
   exec { "cp /tmp/mysql-connector-java/mysql-connector-java-5.1.18-bin.jar /var/www/hydradam/hydra-jetty/webapps/fedora/WEB-INF/lib":
      creates => '/var/www/hydradam/hydra-jetty/webapps/fedora/WEB-INF/lib/mysql-connector-java-5.1.18-bin.jar',
      cwd     => "/var/www/hydradam",
+     path    => '/usr/bin:/bin',
      require => [File['/tmp/mysql-connector-java'], Exec['checkout hydra-jetty']]
   }
   
