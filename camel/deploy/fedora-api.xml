@@ -8,6 +8,24 @@
 
     <camelContext xmlns="http://camel.apache.org/schema/blueprint" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:access="http://www.fedora.info/definitions/1/0/access/">
 
+      <route>
+        <from uri="vm:fedora.create_object" />
+                <transform><simple /></transform>
+
+        <setHeader headerName="CamelHttpMethod">
+          <constant>POST</constant>
+        </setHeader>
+        <setHeader headerName="CamelHttpContentType">
+          <simple>${header.mimeType}</simple>
+        </setHeader>
+        <setHeader headerName="CamelHttpUri">
+          <simple>${header.repository_url}/objects/${header.pid}</simple>
+        </setHeader>
+
+        <inOut uri="http://local.fedora.server?authMethod=Basic&amp;authUsername=fedoraAdmin&amp;authPassword=fedoraAdmin" />
+
+      </route>
+
       <!-- create/update a fedora datastream, put the body content into header.pid as header.dsid  with header.mimeType -->
       <route>
         <from uri="activemq:fedora.datastream.create" />
