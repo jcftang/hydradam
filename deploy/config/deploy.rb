@@ -248,6 +248,30 @@ desc "Compile asets"
   task :config do
     sudo "/sbin/service jetty stop"
     run "cd #{current_path}; bundle exec rake hydra:jetty:config"
+
+
+    run <<-EOF
+cd #{current_path}/jetty;
+echo 'spawn fedora/default/server/bin/fedora-rebuild.sh
+
+sleep 2
+expect ">"
+send "2"
+send "\r"
+sleep 1
+expect ">"
+sleep 1
+send "1"
+send "\r"
+expect ">"
+sleep 1
+wait
+
+' | FEDORA_HOME=`pwd`/fedora/default CATALINA_HOME=`pwd` expect -f -
+
+EOF
+
+
     run <<-EOF
 cd #{current_path}/jetty;
 echo 'spawn fedora/default/server/bin/fedora-rebuild.sh
@@ -263,13 +287,12 @@ send "1"
 send "\r"
 expect ">"
 sleep 1
-send "1"
-send "\r"
 wait
 
 ' | FEDORA_HOME=`pwd`/fedora/default CATALINA_HOME=`pwd` expect -f -
 
 EOF
+
     sudo "/sbin/service jetty start"
 
     sleep 30
