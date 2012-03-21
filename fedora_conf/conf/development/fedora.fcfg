@@ -161,7 +161,7 @@
 	    	This should be unique for a repository. It can be from 1 to 17 
 	    	characters, and may only contain A-Z, a-z, 0-9, &apos;.&apos;, or &apos;-&apos; (dash).</comment>
     </param>
-    <param name="storagePool" value="localDerbyPool">
+    <param name="storagePool" value="localMySQLPool">
       <comment>The named connection pool from which read/write database 
 	    	connections are to be provided for the storage subsystem (see the 
 	    	ConnectionPoolManager module). Default is the default provided by the 
@@ -319,7 +319,7 @@
             number of results is greater than maxResults (as specified by the
             server [above] or the client [in the search request]).</comment>
     </param>
-    <param name="connectionPool" value="localDerbyPool">
+    <param name="connectionPool" value="localMySQLPool">
       <comment>(optional) To make unspecified, comment out or delete the 
 	    	whole param line as opposed to using an empty string,
             default=ConnectionPoolManager&apos;s default) The connectionPool
@@ -427,8 +427,8 @@
   </module>
   <module role="org.fcrepo.server.storage.ConnectionPoolManager" class="org.fcrepo.server.storage.ConnectionPoolManagerImpl">
     <comment>This module facilitates obtaining ConnectionPools</comment>
-    <param name="defaultPoolName" value="localDerbyPool"/>
-    <param name="poolNames" value="localDerbyPool"/>
+    <param name="defaultPoolName" value="localMySQLPool"/>
+    <param name="poolNames" value="localMySQLPool"/>
   </module>
   <module role="org.fcrepo.server.validation.DOValidator" class="org.fcrepo.server.validation.DOValidatorModule">
     <comment>Description: Supports validation of digital objects, including
