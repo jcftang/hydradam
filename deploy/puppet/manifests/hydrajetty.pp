@@ -24,6 +24,26 @@ class hydrajetty {
     require => File['/var/www/hydradam']
   }
 
+
+   download_file { "mysql-connector-java.tar.gz":
+    from => "http://mirror.services.wisc.edu/mysql/Downloads/Connector-J/mysql-connector-java-5.1.18.tar.gz",
+    cwd  => "/tmp"
+  }
+
+  extract_file { "/tmp/mysql-connector-java.tar.gz":
+    destdir => "/tmp/",
+    creates => "mysql-connector-java-5.1.18",
+    to      => '/tmp/mysql-connector-java',
+    require => [File["/tmp/mysql-connector-java.tar.gz"]]
+  }
+
+  exec { "cp /tmp/mysql-connector-java/mysql-connector-java-5.1.18-bin.jar /var/www/hydradam/hydra-jetty/webapps/fedora/WEB-INF/lib":
+     creates => '/var/www/hydradam/hydra-jetty/webapps/fedora/WEB-INF/lib/mysql-connector-java-5.1.18-bin.jar',
+     cwd     => "/var/www/hydradam",
+     require => [File['/tmp/mysql-connector-java'], Exec['checkout hydra-jetty']]
+  }
+  
+
   exec { 'start jetty service':
     command => "/usr/bin/sudo /sbin/chkconfig jetty on; /usr/bin/sudo /sbin/service jetty start", 
     require => [File['/etc/init.d/jetty'], File["/etc/default/jetty"]]
