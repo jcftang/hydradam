@@ -122,6 +122,21 @@
   @extend .table-striped;
 }
 
+#bd #search {
+  @extend .well;
+}
+
+#facets {
+  @extend .well;
+}
+
+.pagination {
+  height: auto;
+  h2 { 
+    display: none;
+  }
+}
+
 #bd div.search {
   @extend .form-search;
 
