@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/cbeer/active_fedora.git
-  revision: 06aaeef39797290c019beb9a1dc9eee1757cac8f
+  revision: dfaf98012259b5d35ed7f413ff0bb527fff57472
   specs:
     active-fedora (4.0.0.rc15)
       activeresource (>= 3.0.0)
@@ -20,7 +20,7 @@ GIT
 
 GIT
   remote: git://github.com/projectblacklight/blacklight.git
-  revision: 58f1317999facb41082d94c11e8f0a18aebc39f8
+  revision: 5a8bc24249e2a56da6789591de9e214a65d09256
   specs:
     blacklight (3.3.0)
       compass-rails (~> 1.0.0)
@@ -140,7 +140,7 @@ GEM
       cucumber (>= 1.1.8)
       nokogiri (>= 1.5.0)
     daemons (1.1.8)
-    database_cleaner (0.7.1)
+    database_cleaner (0.7.2)
     delayed_job (3.0.1)
       activesupport (~> 3.0)
     delayed_job_active_record (0.3.2)
@@ -201,7 +201,7 @@ GEM
     mediainfo (0.7.2)
     mediashelf-loggable (0.4.9)
     metaclass (0.0.1)
-    mime-types (1.17.2)
+    mime-types (1.18)
     mocha (0.10.5)
       metaclass (~> 0.0.1)
     multi_json (1.1.0)
