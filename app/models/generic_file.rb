@@ -6,6 +6,7 @@ class GenericFile < ActiveFedora::Base
 
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => GenericFileRDFDatastream
+  has_metadata :name => "Exiftool", :type => ExiftoolDatastream
   has_file_datastream :type => FileContentDatastream
 
   belongs_to :batch, :property => "isPartOf"
