@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/cbeer/active_fedora.git
-  revision: dfaf98012259b5d35ed7f413ff0bb527fff57472
+  revision: cb6743db36408133d4ef7e7ac65e114180483a68
   specs:
     active-fedora (4.0.0.rc15)
       activeresource (>= 3.0.0)
