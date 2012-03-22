@@ -81,6 +81,7 @@ namespace :deploy do
     system "cap deploy:db:migrate"
     system "cap deploy:fedora:db:create"
     system "cap deploy:jetty:config"
+    system "cap deploy:fedora:rebuild"
     system "cap deploy:camel:routes"
     system "cap deploy:fedora:fixtures"
     system "cap deploy:passenger:restart"
@@ -125,6 +126,60 @@ namespace :deploy do
        run "mysql -u root -e 'CREATE DATABASE fedora3; CREATE USER \"fedoraAdmin\"@\"localhost\" IDENTIFIED BY  \"fedoraAdmin\"; GRANT ALL on fedora3.* TO \"fedoraAdmin\"@\"localhost\";'"
      end
    end
+
+   task :rebuild do
+    sudo "/sbin/service jetty stop"
+
+    sleep 5
+
+    rebuild_script = <<-EOF
+spawn fedora/default/server/bin/fedora-rebuild.sh
+sleep 2
+expect ">"
+send "2"
+send "\r"
+sleep 1
+expect ">"
+sleep 1
+send "1"
+send "\r"
+expect ">"
+sleep 1
+wait
+EOF
+
+put rebuild_script, "/tmp/fedora-rebuild-db"
+
+run "cd #{current_path}/jetty; FEDORA_HOME=./fedora/default CATALINA_HOME=. expect -f /tmp/fedora-rebuild-db"
+
+
+    rebuild_script = <<-EOF
+spawn fedora/default/server/bin/fedora-rebuild.sh
+sleep 2
+expect ">"
+send "2"
+send "\r"
+sleep 1
+expect ">"
+sleep 1
+send "1"
+send "\r"
+expect ">"
+sleep 1
+wait
+EOF
+
+put rebuild_script, "/tmp/fedora-rebuild-triple"
+
+run "cd #{current_path}/jetty; FEDORA_HOME=./fedora/default CATALINA_HOME=. expect -f /tmp/fedora-rebuild-triple"
+
+
+
+    sleep 10
+    sudo "/sbin/service jetty start"
+
+    sleep 30
+  end
  end
 
   
@@ -246,57 +301,10 @@ desc "Compile asets"
   end
 
   task :config do
-    sudo "/sbin/service jetty stop"
     run "cd #{current_path}; bundle exec rake hydra:jetty:config"
-
-
-    run <<-EOF
-cd #{current_path}/jetty;
-echo 'spawn fedora/default/server/bin/fedora-rebuild.sh
-
-sleep 2
-expect ">"
-send "2"
-send "\r"
-sleep 1
-expect ">"
-sleep 1
-send "1"
-send "\r"
-expect ">"
-sleep 1
-wait
-
-' | FEDORA_HOME=`pwd`/fedora/default CATALINA_HOME=`pwd` expect -f -
-
-EOF
-
-
-    run <<-EOF
-cd #{current_path}/jetty;
-echo 'spawn fedora/default/server/bin/fedora-rebuild.sh
-
-sleep 2
-expect ">"
-send "1"
-send "\r"
-sleep 1
-expect ">"
-sleep 1
-send "1"
-send "\r"
-expect ">"
-sleep 1
-wait
-
-' | FEDORA_HOME=`pwd`/fedora/default CATALINA_HOME=`pwd` expect -f -
-
-EOF
-
-    sudo "/sbin/service jetty start"
-
-    sleep 30
   end
+
+
   end
   
 
@@ -336,7 +344,6 @@ before "deploy:setup", "create_gemset"
 before :deploy, "deploy:setup"
 
 before "deploy:jetty:config", "deploy:jetty:symlink"
-after "deploy:jetty:config", "jetty:restart"
 
 after :deploy,  "deploy:assets", "deploy:set_permissions"
 after 'deploy:setup', 'deploy:setup_shared_path'
