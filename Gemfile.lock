@@ -34,13 +34,15 @@ GIT
       sass-rails (~> 3.2.0)
       unicode
 
-PATH
-  remote: /Volumes/Scratch/hydra-head
+GIT
+  remote: git://github.com/projecthydra/hydra-head.git
+  revision: b49aa27eb0e6c33cd2ad4caa05d7ebd655b25237
+  branch: 4.0.x
   specs:
     hydra-head (4.0.0.rc2)
       RedCloth (= 4.2.9)
       active-fedora (~> 4.0.0.rc15)
-      blacklight (~> 3.3)
+      blacklight (~> 3.2, >= 3.2.2)
       block_helpers
       devise
       om (= 1.5.3)
