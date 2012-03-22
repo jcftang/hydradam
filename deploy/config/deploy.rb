@@ -340,11 +340,7 @@ task :create_gemset do
 end
 
 before "deploy:setup", "create_gemset"
-
-before :deploy, "deploy:setup"
-
 before "deploy:jetty:config", "deploy:jetty:symlink"
-
 after :deploy,  "deploy:assets", "deploy:set_permissions"
 after 'deploy:setup', 'deploy:setup_shared_path'
 
