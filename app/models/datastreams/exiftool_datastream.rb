@@ -66,7 +66,7 @@ end
 
 class ExiftoolDatastream 
   register_vocabularies RDF::EXIF::File, RDF::EXIF::Quicktime, RDF::EXIF::System, RDF::EXIF::Quicktime::Track1
-  subject { |ds| "info:fedora/#{ds.pid}/content" }
+  rdf_subject { |ds| "info:fedora/#{ds.pid}/content" }
 
   map_predicates do |map|
     map.qt_create_date(:to => :CreateDate, :in => RDF::EXIF::Quicktime) do |index|
