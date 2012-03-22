@@ -44,8 +44,8 @@ gem 'compass-rails'
 gem "devise"
 gem "blacklight", :git   => "git://github.com/projectblacklight/blacklight.git"
 gem "hydra-head", :git   => "git://github.com/projecthydra/hydra-head.git", :branch => '4.0.x'
-gem 'active-fedora', :git=>'git://github.com/mediashelf/active_fedora.git'
-gem 'blacklight_advanced_search' 
+gem 'active-fedora', :git=>'git://github.com/cbeer/active_fedora.git'
+gem 'blacklight_advanced_search' , '~> 1.2.1'
 gem "mediainfo"
 gem "noid", ">= 0.5.4"
 gem 'delayed_job_active_record'
