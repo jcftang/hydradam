@@ -13,32 +13,93 @@
         <setHeader headerName="repository_url">
           <constant>http://localhost:8983/fedora</constant>
         </setHeader>
-        <setHeader headerName="pid">
-          <constant>new</constant>
-        </setHeader>
+         
+        <enrich uri="direct:enrich_with_fedora_object"/>
 
-        <setHeader headerName="file_content">
-          <simple>${body}</simple>
-        </setHeader>
-        <inOut uri="vm:fedora.create_object" />
-
-        <setHeader headerName="pid">
-          <simple>${body}</simple>
-        </setHeader>
         <transform>
-          <simple>${header.file_content}</simple>
+          <simple>${property.CamelFileExchangeFile}</simple>
         </transform>
 
 
-        <removeHeaders pattern="CamelHttp*" />
+        <setHeader headerName="predicate">
+          <constant>info:fedora/fedora-system:def/model%2523hasModel</constant>
+        </setHeader>
+        <setHeader headerName="object">
+          <constant>info:fedora/afmodel:GenericFile</constant>
+        </setHeader>
+        <inOnly uri="vm:fedora.relationship.add" />
+        <removeHeader headerName="object" />
+        <removeHeader headerName="predicate" />
 
+        <inOnly uri="vm:fedora.add_generic_rights_datastream" />
+
+        <removeHeaders pattern="CamelHttp*" />
         <setHeader headerName="dsid">
           <constant>content</constant>
         </setHeader>
         <setHeader headerName="mimeType">
           <constant>application/octet-stream</constant>
         </setHeader>
-        <to uri="vm:fedora.datastream.create" />
+        <to uri="activemq:fedora.datastream.create" />
+
+      </route>
+
+      <route>
+        <from uri="vm:fedora.add_generic_rights_datastream" />
+        <removeHeaders pattern="CamelHttp*" />
+        <setHeader headerName="dsid">
+          <constant>rightsMetadata</constant>
+        </setHeader>
+        <setHeader headerName="mimeType">
+          <constant>text/xml</constant>
+        </setHeader>
+        <transform>
+          <constant><![CDATA[
+            <?xml version="1.0" encoding="UTF-8"?>
+<rightsMetadata xmlns="http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1" version="0.1">
+  <copyright>
+    <human></human>
+    <machine>
+      <uvalicense>no</uvalicense>
+    </machine>
+  </copyright>
+  <access type="discover">
+    <human></human>
+    <machine></machine>
+  </access>
+  <access type="read">
+    <human></human>
+    <machine></machine>
+  </access>
+  <access type="edit">
+    <human></human>
+    <machine>
+      <person>chris_beer@wgbh.org</person>
+    </machine>
+  </access>
+  <embargo>
+    <human></human>
+    <machine></machine>
+  </embargo>
+</rightsMetadata>
+            ]]></constant>
+        </transform>
+        <to uri="activemq:fedora.datastream.create" />
+
+        <removeHeaders pattern="CamelHttp*" />
+        <removeHeader headerName="dsid" />
+        <removeHeader headerName="mimeType" />
+      </route>
+
+      <route>
+        <from uri="direct:enrich_with_fedora_object" />
+        <setHeader headerName="pid">
+          <constant>new</constant>
+        </setHeader>
+        <inOut uri="vm:fedora.create_object" />
+        <setHeader headerName="pid">
+          <simple>${body}</simple>
+        </setHeader>
       </route>
 
       <route>

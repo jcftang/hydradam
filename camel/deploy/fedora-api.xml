@@ -10,19 +10,17 @@
 
       <route>
         <from uri="vm:fedora.create_object" />
-        <transform><simple /></transform>
 
         <setHeader headerName="CamelHttpMethod">
           <constant>POST</constant>
-        </setHeader>
-        <setHeader headerName="CamelHttpContentType">
-          <simple>${header.mimeType}</simple>
         </setHeader>
         <setHeader headerName="CamelHttpUri">
           <simple>${header.repository_url}/objects/${header.pid}</simple>
         </setHeader>
 
-        <inOut uri="http://local.fedora.server?authMethod=Basic&amp;authUsername=fedoraAdmin&amp;authPassword=fedoraAdmin" />
+        <transform><constant /></transform>
+        <to uri="http://local.fedora.server?authMethod=Basic&amp;authUsername=fedoraAdmin&amp;authPassword=fedoraAdmin" />
+        <removeHeaders pattern="CamelHttp*" />
         <convertBodyTo type="java.lang.String" />
       </route>
 
@@ -39,6 +37,25 @@
           <simple>${header.repository_url}/objects/${header.pid}/datastreams/${header.dsid}?controlGroup=M&amp;mimeType=${header.mimeType}</simple>
         </setHeader>
         <to uri="http://local.fedora.server?authMethod=Basic&amp;authUsername=fedoraAdmin&amp;authPassword=fedoraAdmin" />
+        <removeHeaders pattern="CamelHttp*" />
+      </route>
+
+      <route>
+        <from uri="vm:fedora.relationship.add" />
+
+        <transform><constant /></transform>
+        <setHeader headerName="CamelHttpMethod">
+          <constant>POST</constant>
+        </setHeader>
+        <setHeader headerName="subject">
+          <simple>info:fedora/${header.pid}</simple>
+        </setHeader>
+        <setHeader headerName="CamelHttpUri">
+          <simple>${header.repository_url}/objects/${header.pid}/relationships/new?subject=${header.subject}&amp;predicate=${header.predicate}&amp;object=${header.object}&amp;isLiteral=false</simple>
+        </setHeader>
+
+        <to uri="http://local.fedora.server?authMethod=Basic&amp;authUsername=fedoraAdmin&amp;authPassword=fedoraAdmin" />
+        <removeHeaders pattern="CamelHttp*" />
       </route>
 
       <route>
