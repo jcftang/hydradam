@@ -74,7 +74,7 @@
   <access type="edit">
     <human></human>
     <machine>
-      <person>chris_beer@wgbh.org</person>
+      <group>registered</group>
     </machine>
   </access>
   <embargo>
@@ -86,7 +86,6 @@
         </transform>
         <to uri="activemq:fedora.datastream.create" />
 
-        <removeHeaders pattern="CamelHttp*" />
         <removeHeader headerName="dsid" />
         <removeHeader headerName="mimeType" />
       </route>
