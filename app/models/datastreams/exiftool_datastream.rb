@@ -65,7 +65,7 @@ class RDF::EXIF::RIFF < RDF::Vocabulary("http://ns.exiftool.ca/RIFF/RIFF/1.0/")
 end
 
 class ExiftoolDatastream 
-  register_vocabularies RDF::EXIF::File, RDF::EXIF::Quicktime, RDF::EXIF::System, RDF::EXIF::Quicktime::Track1
+  register_vocabularies RDF::EXIF::File, RDF::EXIF::Quicktime, RDF::EXIF::Composite, RDF::EXIF::RIFF, RDF::EXIF::XMP, RDF::EXIF::XMP::DC, RDF::EXIF::System, RDF::EXIF::Quicktime::Track1
   rdf_subject { |ds| "info:fedora/#{ds.pid}/content" }
 
   map_predicates do |map|
