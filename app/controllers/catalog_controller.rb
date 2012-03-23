@@ -74,6 +74,7 @@ def enforce_solr_permissions(opts={})
     config.add_index_field 'system_create_dt', :label => 'Created:'
     config.add_index_field 'label_t', :label => 'Label:'
     config.add_index_field 'objProfile_objOwnerId_s', :label => 'Owner:'
+    config.add_index_field 'exiftool_datastream__duration_display', :label => 'Duration'
 
 
     # solr fields to be displayed in the show (single result) view
@@ -83,6 +84,20 @@ def enforce_solr_permissions(opts={})
     config.add_show_field 'format_label_t', :label => 'Format:'
     config.add_show_field 'mime_type_t', :label => 'MIME Type:'
     config.add_show_field 'system_create_dt', :label => 'Created:'
+    config.add_show_field 'exiftool_datastream__duration_display', :label => 'Duration'
+    config.add_show_field 'exiftool_datastream__width_facet', :label => 'Width'
+    config.add_show_field 'exiftool_datastream__height_facet', :label => 'Height'
+    config.add_show_field 'exiftool_datastream__qt_compressor_name_facet', :label => 'Compressor name'
+    config.add_show_field 'exiftool_datastream__encoding_display', :label => 'Encoding'
+    config.add_show_field 'exiftool_datastream__fps_display', :label => 'FPS'
+    config.add_show_field 'exiftool_datastream__bit_depth_facet', :label => 'Bit depth'
+    config.add_show_field 'exiftool_datastream__sample_rate_display', :label => 'Sample rate'
+    config.add_show_field 'exiftool_datastream__creator_facet', :label => 'Creator (extracted)'
+    config.add_show_field 'exiftool_datastream__qt_create_date_display', :label => 'Create Date (extracted)'
+    config.add_show_field 'exiftool_datastream__xmp_create_date_display', :label => 'Create Date (extracted)'
+    config.add_show_field 'exiftool_datastream__size_display', :label => 'Size'
+    config.add_show_field 'exiftool_datastream__type_display', :label => 'Type'
+    config.add_show_field 'exiftool_datastream__encoding_facet', :label => 'Encoding'
     
 
     # "fielded" search configuration. Used by pulldown among other places.
