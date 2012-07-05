@@ -50,6 +50,8 @@ GEM
     rspec-expectations (2.8.0)
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.8.0)
+    rvm-capistrano (1.2.2)
+      capistrano (>= 2.0.0)
     term-ansicolor (1.0.7)
     thor (0.14.6)
     vagrant (0.9.7)
@@ -80,5 +82,6 @@ PLATFORMS
 DEPENDENCIES
   capistrano
   puppet
+  rvm-capistrano
   vagrant (~> 0.8)
   veewee

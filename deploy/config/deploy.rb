@@ -33,11 +33,10 @@ def application_specific_tasks
   # system 'cap deploy:run_command command="ls -la"'
 end
 
-
-$:.unshift(File.expand_path('./lib', ENV['rvm_path']))
 require "rvm/capistrano"  
 require 'bundler/capistrano'
 set :rvm_ruby_string, '1.9.3@hydradam'
+set :rvm_type, :system
 
 
 #set :user, "deployer"
@@ -336,7 +335,7 @@ def disable_rvm_shell(&block)
 end
 
 task :create_gemset do
-  disable_rvm_shell { run "rvm use #{rvm_ruby_string} --create" }
+  disable_rvm_shell { run "rvm gemset create hydradam" }
 end
 
 before "deploy:setup", "create_gemset"

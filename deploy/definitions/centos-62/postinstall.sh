@@ -3,18 +3,18 @@
 
 date > /etc/vagrant_box_build_time
 
-yum -y install gcc make gcc-c++ ruby kernel-devel-`uname -r` zlib-devel openssl-devel readline-devel sqlite-devel perl
+yum -y install gcc make gcc-c++ kernel-devel-`uname -r` zlib-devel openssl-devel readline-devel sqlite-devel perl path readline zlib libyaml-devel libffi-devel automake bison iconv-devel autoconf automake bzip2 
 
-/bin/bash -c "bash -s stable < <(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer)"
+
+bash -s stable < <(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer)
 
 source /etc/profile.d/rvm.sh
 
-rvm install ruby-1.8.7
-rvm install ruby-1.9.3-p125
+rvm install ruby-1.9.3
 
-rvm --default use 1.8.7
+rvm --default use 1.9.3
 
-gem install --no-ri --no-rdoc puppet facter chef
+gem install --no-ri --no-rdoc puppet facter
 
 groupadd puppet
 usermod -a -G rvm -G puppet vagrant

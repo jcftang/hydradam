@@ -4,3 +4,4 @@ gem 'vagrant', "~> 0.8"
 gem 'veewee'
 gem 'puppet'
 gem 'capistrano'
+gem 'rvm-capistrano'
