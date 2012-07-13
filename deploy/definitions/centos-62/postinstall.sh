@@ -3,7 +3,11 @@
 
 date > /etc/vagrant_box_build_time
 
+yum -y clean all
+yum -y update
 yum -y install gcc make gcc-c++ kernel-devel-`uname -r` zlib-devel openssl-devel readline-devel sqlite-devel perl path readline zlib libyaml-devel libffi-devel automake bison iconv-devel autoconf automake bzip2 git rsync libtool patch
+
+#yum -y groupinstall "X Window System"
 
 curl https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer | bash -s stable
 
@@ -30,7 +34,7 @@ VBOX_VERSION=$(cat /home/vagrant/.vbox_version)
 cd /tmp
 curl -L -o VBoxGuestAdditions_$VBOX_VERSION.iso http://download.virtualbox.org/virtualbox/$VBOX_VERSION/VBoxGuestAdditions_$VBOX_VERSION.iso
 mount -o loop VBoxGuestAdditions_$VBOX_VERSION.iso /mnt
-sh /mnt/VBoxLinuxAdditions.run
+sh /mnt/VBoxLinuxAdditions.run --nox11
 umount /mnt
 
 rm VBoxGuestAdditions_$VBOX_VERSION.iso
