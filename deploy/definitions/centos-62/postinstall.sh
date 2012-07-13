@@ -22,7 +22,7 @@ usermod -a -G rvm -G puppet vagrant
 mkdir /home/vagrant/.ssh
 chmod 700 /home/vagrant/.ssh
 cd /home/vagrant/.ssh
-curl -L -o authorized_keys https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub
+#curl -L -o authorized_keys https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub
 chown -R vagrant /home/vagrant/.ssh
 
 # Installing the virtualbox guest additions
@@ -36,7 +36,5 @@ umount /mnt
 rm VBoxGuestAdditions_$VBOX_VERSION.iso
 
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
-
-dd if=/dev/zero of=/tmp/clean || rm /tmp/clean
 
 exit
